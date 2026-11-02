@@ -7,6 +7,16 @@ Fotogids voor autofoto's op de Pixel 10 Pro. Twee modi:
 
 Per foto: waar je staat, hoogte, lens, waarom, en een kader in de live zoeker.
 
+## Functies
+
+- Shotlist met camerapositie, kader in de zoeker, zoom en camera-instellingen per foto
+- Kwaliteitscheck na elke foto (scherpte, belichting, rechtheid) en spookbeeld van de vorige foto
+- Markeren op foto's met pijl, cirkel of pen (origineel blijft bewaard)
+- Keuring: RDW-gegevens via kenteken, banden en lakdikte, schadekaart, video van koude start en walkaround
+- Keuringsrapport, op te slaan als PDF
+- Gouden uur en bewolking voor je locatie
+- Instagram-export in 4:5 met caption
+
 ## Op GitHub Pages zetten
 
 1. Maak een nieuwe repository, bijvoorbeeld `hoekvast`.

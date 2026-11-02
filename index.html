@@ -140,6 +140,131 @@ h2 small{font:500 12px var(--f-mono);color:var(--mute);letter-spacing:.06em;marg
 .fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:90px 24px 40px;color:#ccc;font-size:14px}
 .fallback svg{width:min(100%,520px);height:auto;border:1px dashed #fff3;border-radius:10px}
 .toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ok);color:#06140c;font-weight:600;padding:8px 14px;border-radius:999px;z-index:30;font-size:14px}
+
+/* Keuring */
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.plate{flex:1;min-width:0;max-width:220px;background:#f2c14e;color:#14161a;border:2px solid #14161a;outline:1px solid var(--tape);border-radius:6px;padding:8px 12px;font:700 20px var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.go.small{font-size:14px;padding:8px 12px;cursor:pointer}
+.go[disabled]{opacity:.4}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:12px}
+.fact{border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.fact span{display:block;font:500 11px var(--f-mono);color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.fact b{display:block;font-weight:600;overflow-wrap:anywhere}
+.fact em{display:block;font-style:normal;font-size:12px;margin-top:2px}
+.fact.good{border-color:var(--ok)} .fact.warn{border-color:var(--warn)} .fact.bad{border-color:#e5484d}
+.fact.warn em{color:var(--warn)} .fact.bad em{color:#ff6b6f}
+.vrow{display:flex;gap:10px;align-items:center;margin:8px 0;flex-wrap:wrap}
+.vprev{width:100%;max-width:420px;border-radius:8px;background:#000;margin-bottom:6px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.meas{display:flex;flex-direction:column;gap:4px;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.meas span{font:500 11px var(--f-mono);color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.meas input{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;color:var(--fg);font:600 16px var(--f-mono);width:100%}
+.meas em{font-style:normal;font-size:12px;color:var(--mute)}
+.meas.good{border-color:var(--ok)} .meas.good em{color:var(--ok)}
+.meas.warn{border-color:var(--warn)} .meas.warn em{color:var(--warn)}
+.meas.bad{border-color:#e5484d} .meas.bad em{color:#ff6b6f}
+.dwrap{display:flex;justify-content:center;margin:8px 0 12px}
+.dmap{width:100%;max-width:260px;height:auto;cursor:crosshair;touch-action:manipulation}
+.dmap .dl{font:600 10px var(--f-mono);fill:var(--mute)}
+.dmap .db{fill:#2a2e36;stroke:#9a9ea8;stroke-width:1.5}
+.dmap .dg{fill:#14161a;stroke:#3a3f48}
+.dmap .dr{fill:#23262d;stroke:#3a3f48}
+.dmap .dpl{stroke:#3a3f48;stroke-dasharray:3 3}
+.dmap .dw{fill:#0b0c0e}
+.dm circle{stroke:#fff;stroke-width:2}
+.dm text{font:700 11px var(--f-mono);fill:#fff}
+.dm.good circle{fill:#2f8f5b} .dm.warn circle{fill:#d0702f} .dm.bad circle{fill:#d0343a}
+.drow{display:flex;gap:10px;align-items:flex-start;border-top:1px solid var(--line);padding:10px 0}
+.dn{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--f-mono);background:#d0702f;color:#fff}
+.dn.good{background:#2f8f5b} .dn.bad{background:#d0343a}
+.dfields{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.dfields input{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;color:var(--fg);font:inherit;width:100%}
+.drow2{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.nav.lite{border:1px solid var(--line);background:none;color:var(--fg);border-radius:8px;padding:6px 10px;font:600 13px var(--f-display);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.stbox{margin:0 0 12px;display:flex;flex-direction:column;gap:6px}
+.st{display:flex;gap:6px;flex-wrap:wrap}
+.st button{border:1px solid var(--line);background:none;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;color:var(--mute)}
+.st.small button{padding:3px 10px;font-size:12px}
+.st button.good[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#06140c}
+.st button.warn[aria-pressed="true"]{background:var(--warn);border-color:var(--warn);color:#1d0d03}
+.st button.bad[aria-pressed="true"]{background:#e5484d;border-color:#e5484d;color:#fff}
+.snote{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--fg);font:inherit;width:100%;resize:vertical}
+.num[data-st="ok"]{color:var(--ok)} .num[data-st="let"]{color:var(--warn)} .num[data-st="afk"]{color:#ff6b6f}
+.chip.qw{border-color:var(--warn);color:var(--warn)}
+.thumb[data-annot]{cursor:pointer}
+.gh{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:10px 0}
+.gh div{border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.gh span{font:500 11px var(--f-mono);color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.gh b{font:700 24px var(--f-display);font-variant-numeric:tabular-nums}
+.igpick{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.igp{position:relative;display:flex;flex-direction:column;gap:4px;font-size:12px;cursor:pointer}
+.igp img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:6px;border:2px solid var(--line)}
+.igp input{position:absolute;top:6px;left:6px;width:20px;height:20px;accent-color:var(--tape)}
+.igp input:checked+img{border-color:var(--tape)}
+.prompt textarea{width:100%;background:none;border:0;color:var(--fg);font:13px/1.5 var(--f-mono);resize:vertical}
+#ghost{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.38;pointer-events:none}
+.cbar .x[aria-pressed="true"]{background:var(--tape);color:var(--tape-ink);border-color:var(--tape)}
+.toast.warn{background:var(--warn);color:#1d0d03}
+
+/* Tekenen */
+#annot{position:fixed;inset:0;z-index:40;background:#000;display:flex;flex-direction:column}
+.atools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 10px) max(12px,env(safe-area-inset-right,0px)) 10px max(12px,env(safe-area-inset-left,0px));background:#0b0c0e}
+.atools button{border:1px solid #fff3;background:none;color:#fff;border-radius:8px;padding:7px 12px;font:600 14px var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+.atools button[aria-pressed="true"]{background:#ff2d2d;border-color:#ff2d2d}
+.atools .sp{flex:1}
+.atools #asave{background:var(--tape);color:var(--tape-ink);border-color:var(--tape)}
+.astage{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px}
+#acanvas{max-width:100%;max-height:100%;touch-action:none;cursor:crosshair}
+
+/* Rapport (bewust licht, voor PDF) */
+#report{position:fixed;inset:0;z-index:40;background:#e9e7e2;overflow-y:auto;color:#16181c}
+.rbar{position:sticky;top:0;display:flex;gap:8px;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 10px) max(12px,env(safe-area-inset-right,0px)) 10px max(12px,env(safe-area-inset-left,0px));background:#14161a;color:#eceae4}
+.rbar b{flex:1;font:700 18px var(--f-display);text-transform:uppercase;letter-spacing:.05em}
+.rbar button{border:1px solid #fff3;background:none;color:#fff;border-radius:8px;padding:7px 12px;font:600 14px var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+.rbar #rprint{background:var(--tape);color:var(--tape-ink);border-color:var(--tape)}
+.rbar .note{color:#9a9ea8;flex-basis:100%}
+#rbody{background:#fff;max-width:820px;margin:16px auto;padding:28px max(18px,4vw);font:14px/1.5 var(--f-body);color:#16181c}
+.rhead{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:3px solid #16181c;padding-bottom:12px;margin-bottom:16px}
+.rlogo{font:700 30px/1 var(--f-display);text-transform:uppercase;letter-spacing:.02em}
+.rlogo span{color:#b8860b}
+.rsub{font:500 12px var(--f-mono);text-transform:uppercase;letter-spacing:.12em;color:#5b5f68;margin-top:4px}
+.rmeta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;text-align:right}
+.rplate{background:#f2c14e;border:2px solid #16181c;border-radius:4px;padding:2px 8px;font:700 15px var(--f-mono);letter-spacing:.08em}
+#rbody h2{font:700 20px var(--f-display);text-transform:uppercase;letter-spacing:.04em;margin:22px 0 8px;color:#16181c}
+#rbody h3{font:600 13px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:#5b5f68;margin:12px 0 6px}
+#rbody .fact{border-color:#d6d3cc} #rbody .fact span{color:#5b5f68}
+#rbody .fact.good{border-color:#2f8f5b} #rbody .fact.warn{border-color:#d0702f} #rbody .fact.bad{border-color:#d0343a}
+#rbody .fact.warn em{color:#a5501a} #rbody .fact.bad em{color:#b0262b}
+.rp{display:inline-block;border:1px solid #c9c6bf;border-radius:999px;padding:1px 9px;font-size:12px;font-weight:600;white-space:nowrap}
+.rp.good{background:#e3f4ea;border-color:#2f8f5b;color:#1f6b42} .rp.warn{background:#fbeadf;border-color:#d0702f;color:#8f4314} .rp.bad{background:#fbe2e3;border-color:#d0343a;color:#9b1f24}
+.rcount{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.rverdict{border-left:4px solid #b8860b;background:#faf6ec;padding:10px 12px;margin:10px 0}
+.rissues{padding-left:18px} .rissues li{margin:4px 0}
+#rbody table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+#rbody th,#rbody td{border:1px solid #d6d3cc;padding:6px 8px;text-align:left;vertical-align:top}
+#rbody td small{display:block;color:#5b5f68}
+#rbody td.good{background:#eef8f2} #rbody td.warn{background:#fdf1e8} #rbody td.bad{background:#fdecec}
+.rdmg{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.rdmg svg{width:180px;flex:none}
+.rdmg ol{flex:1;min-width:200px;margin:0;padding-left:20px} .rdmg li{margin:5px 0}
+#rbody .dmap .db{fill:#eceae4;stroke:#5b5f68} #rbody .dmap .dg{fill:#cfd4da;stroke:#9aa0a8} #rbody .dmap .dr{fill:#e2e0da;stroke:#9aa0a8} #rbody .dmap .dw{fill:#16181c} #rbody .dmap .dl{fill:#5b5f68}
+.rgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.rgrid figure{margin:0;break-inside:avoid}
+.rgrid img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px;border:1px solid #d6d3cc}
+.rgrid figcaption{font-size:12px;margin-top:4px}
+.rsmall{font-size:11px;color:#5b5f68}
+.rdisc{margin-top:24px;border-top:1px solid #d6d3cc;padding-top:10px}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff!important}
+  body::before,header,main,#cam,#annot,.toast,.rbar{display:none!important}
+  #report{position:static!important;overflow:visible!important;background:#fff!important}
+  #rbody{margin:0;max-width:none;padding:0}
+  .rbreak{break-before:page}
+  .facts{grid-template-columns:repeat(3,1fr)}
+}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -154,6 +279,7 @@ h2 small{font:500 12px var(--f-mono);color:var(--mute);letter-spacing:.06em;marg
     </div>
     <nav class="tabs" role="tablist">
       <button role="tab" data-tab="list" aria-selected="true">Shotlist</button>
+      <button role="tab" data-tab="extra" aria-selected="false" id="tab-extra">Keuring</button>
       <button role="tab" data-tab="pixel" aria-selected="false">Pixel-instellingen</button>
       <button role="tab" data-tab="light" aria-selected="false">Licht &amp; plek</button>
       <button role="tab" data-tab="ai" aria-selected="false">AI-bewerking</button>
@@ -166,12 +292,13 @@ h2 small{font:500 12px var(--f-mono);color:var(--mute);letter-spacing:.06em;marg
 <section id="cam" hidden aria-label="Camera">
   <div class="vf" id="vf">
     <video id="video" playsinline muted autoplay></video>
+    <img id="ghost" alt="" hidden>
     <img class="still" id="still" alt="" hidden>
     <svg class="ov" id="ov" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"></svg>
     <div class="fallback" id="fb" hidden></div>
     <div class="cbar">
       <div class="t"><b id="c-name"></b><span id="c-how"></span></div>
-      <button class="x" id="c-close" aria-label="Sluit camera">×</button>
+      <button class="x" id="c-ghost" aria-label="Spookbeeld van vorige foto" aria-pressed="false" title="Spookbeeld">◐</button><button class="x" id="c-close" aria-label="Sluit camera">×</button>
     </div>
     <div class="hud" id="hud"></div>
     <div class="level" id="level" hidden></div>
@@ -185,6 +312,14 @@ h2 small{font:500 12px var(--f-mono);color:var(--mute);letter-spacing:.06em;marg
   </div>
 </section>
 <div class="toast" id="toast" hidden></div>
+<section id="report" hidden aria-label="Keuringsrapport">
+  <div class="rbar"><b>Rapport</b><button id="rclose">Sluiten</button><button id="rprint">Opslaan als PDF</button><span class="note">Kies bij afdrukken "Opslaan als PDF".</span></div>
+  <div id="rbody"></div>
+</section>
+<section id="annot" hidden aria-label="Markeren op foto">
+  <div class="atools"><button data-tool="arrow">Pijl</button><button data-tool="circle">Cirkel</button><button data-tool="pen">Pen</button><button id="aundo">Ongedaan</button><span class="sp"></span><button id="acancel">Annuleren</button><button id="asave">Opslaan</button></div>
+  <div class="astage"><canvas id="acanvas"></canvas></div>
+</section>
 
 <script>
 /* ---------- Data ---------- */
@@ -394,6 +529,8 @@ function render(){
   if(tab==="pixel") m.innerHTML=pixelView();
   if(tab==="light") m.innerHTML=lightView();
   if(tab==="ai") m.innerHTML=aiView();
+  if(tab==="extra") m.innerHTML=mode==="mb"?keuringView():instaView();
+  $("#tab-extra").textContent=mode==="mb"?"Keuring":"Instagram";
   bindMain();
 }
 function listView(){
@@ -408,14 +545,15 @@ function listView(){
   <p class="lede">${intro}</p>
   ${SHOTS[mode].map(g=>`<h2>${esc(g.g)} <small>${g.items.length} foto's</small></h2>
    ${g.items.map(s=>{n++;const i=all.indexOf(s);const d=doneIds.has(s.id);return `<details class="shot${d?" done":""}">
-    <summary><span class="num">${d?"✓":String(n).padStart(2,"0")}</span><span class="sname">${esc(s.n)}<em>${esc(s.h)}</em></span>
-     <span class="chips"><span class="chip lens">${esc(s.lens)}</span>${s.d>0?`<span class="chip h">${s.d} m</span>`:""}</span></summary>
+    <summary><span class="num" data-st="${(insp.status||{})[s.id]||""}">${d?"✓":String(n).padStart(2,"0")}</span><span class="sname">${esc(s.n)}<em>${esc(s.h)}</em></span>
+     <span class="chips">${qChips(s.id)}<span class="chip lens">${esc(s.lens)}</span>${s.d>0?`<span class="chip h">${s.d} m</span>`:""}</span></summary>
     <div class="body"><div class="plan">${planSVG(s)}</div>
      <div style="min-width:0">
       <dl class="spec"><dt>Zo</dt><dd>${esc(s.how)}</dd><dt>Hoogte</dt><dd>${esc(s.h)}</dd><dt>Camera</dt><dd>${esc(profText(s))}</dd><dt>Lens</dt><dd>${esc(s.lens)}${s.lens==="0.5x"?" (alleen hier, binnen of onder de auto)":""}</dd>${s.tip?`<dt>Tip</dt><dd>${esc(s.tip)}</dd>`:""}</dl>
       ${s.why?`<p class="why">${esc(s.why)}</p>`:""}
       ${s.ai?`<p class="ai"><b>AI-klaar:</b> ${esc(s.ai)}</p>`:""}
-      <button class="go" data-shoot="${i}">Fotograferen</button>${photos[s.id]?`<img class="thumb" src="${photos[s.id].url}" alt="Gemaakte foto ${esc(s.n)}">`:""}
+      ${statusUI(s)}
+      <button class="go" data-shoot="${i}">${photos[s.id]?"Opnieuw":"Fotograferen"}</button>${photos[s.id]?`<img class="thumb" src="${photos[s.id].url}" data-annot="${s.id}" alt="Gemaakte foto ${esc(s.n)}, tik om te markeren">`:""}
      </div></div></details>`}).join("")}`).join("")}
   <div class="card" style="margin-top:24px"><h3>Klaar met de set?</h3><p class="note">Foto's blijven in deze sessie staan. Exporteer ze naar je telefoon met de juiste bestandsnamen.</p>
    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="go" id="export">Foto's opslaan</button><button class="nav" id="reset" style="border:1px solid var(--line);background:none;color:var(--fg);border-radius:8px;padding:8px 12px">Nieuwe auto</button></div>
@@ -454,6 +592,7 @@ function pixelView(){return `
  <div class="card"><h3>Camera Coach</h3><p>De Pixel 10 Pro heeft Camera Coach (Gemini) die tips geeft over kader en hoek. Handig als tweede check, maar de shotlist hier is leidend zodat elke set hetzelfde wordt.</p></div>`}
 function lightView(){return `
  <p class="lede">Licht bepaalt 80% van het resultaat. Een goede plek scheelt meer dan elke bewerking.</p>
+ <div class="card"><h3>Gouden uur vandaag</h3><div id="ghout"><p class="note">Bereken het gouden uur en de bewolking voor waar je nu bent.</p></div><button class="go small" id="ghbtn">Bereken voor mijn locatie</button></div>
  <div class="card"><h3>Beste licht</h3><ul>
   <li><b>Bewolkt</b> is ideaal voor advertenties en keuringen: zacht licht, geen harde reflecties, schade goed zichtbaar.</li>
   <li><b>Gouden uur</b> (uur na zonsopkomst / voor zonsondergang) voor je eigen shoot: warme kleuren, lange zachte schaduwen.</li>
@@ -501,8 +640,9 @@ function bindMain(){
   });
   document.querySelectorAll("[data-lak]").forEach(b=>b.onclick=()=>{lak=b.dataset.lak;store.set("hv-lak",lak);render()});
   const ex=$("#export"); if(ex) ex.onclick=exportAll;
+  bindExtra();
   const rs=$("#reset"); if(rs) rs.onclick=()=>{
-    if(rs.dataset.sure){doneIds=new Set();store.set("hv-done",[]);Object.keys(photos).forEach(k=>{URL.revokeObjectURL(photos[k].url);delete photos[k]});db.clear();carName="";store.set("hv-car","");render()}
+    if(rs.dataset.sure){doneIds=new Set();store.set("hv-done",[]);Object.keys(photos).forEach(k=>{URL.revokeObjectURL(photos[k].url);delete photos[k]});db.clear();Object.keys(media).forEach(k=>{URL.revokeObjectURL(media[k].url);delete media[k]});insp={};saveInsp();carName="";store.set("hv-car","");render()}
     else{rs.dataset.sure=1;rs.textContent="Zeker? Tik nogmaals"}
   };
 }
@@ -539,6 +679,7 @@ function showShot(){
   $("#hud").insertAdjacentHTML("beforeend",'<div class="prof" id="prof"></div>');
   applyProfile(s);
   $("#fb").innerHTML=`<svg viewBox="0 0 1600 900" style="background:#111">${overlay(s.ov)}</svg><p>Live zoeker is hier niet beschikbaar. Kijk naar het kader hierboven en tik op de gele knop of op Pixel-app om de foto te maken.<br>Op GitHub Pages krijg je de live zoeker met kader en zoomknoppen.</p>`;
+  showGhost();
   const p=photos[s.id]; const mini=$("#mini"); mini.hidden=!p; if(p) mini.src=p.url;
   $("#c-prev").disabled=camIdx===0; $("#c-next").textContent=camIdx===flat().length-1?"✓":"›";
 }
@@ -553,7 +694,12 @@ function savePhoto(blob){
   photos[s.id]={blob,url:URL.createObjectURL(blob)};
   doneIds.add(s.id); store.set("hv-done",[...doneIds]);
   db.put(s.id,blob);
-  toast("Opgeslagen ✓"); showShot();
+  showShot();
+  makeGhost(blob).then(g=>g&&gdb.put(s.id,g));
+  qualityCheck(blob,s).then(flags=>{
+    const q=I("q",{}); if(flags.length) q[s.id]=flags; else delete q[s.id]; saveInsp();
+    if(flags.length) toast("⚠ "+flags.join(", ")+" · maak hem opnieuw",true); else toast("Opgeslagen ✓");
+  });
   if(navigator.vibrate) try{navigator.vibrate(30)}catch(e){}
 }
 function zoomSteps(){
@@ -584,14 +730,14 @@ async function capture(){
   c.getContext("2d").drawImage(v,0,0);
   c.toBlob(b=>b&&savePhoto(b),"image/jpeg",.92);
 }
-function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,1400)}
+function toast(t,warn){const el=$("#toast");el.textContent=t;el.classList.toggle("warn",!!warn);el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,warn?3200:1400)}
 
 /* Waterpas via kantelsensor (werkt na plaatsen op GitHub, niet in elke preview) */
 function onTilt(e){
   const el=$("#level");
   const landscape=Math.abs(window.orientation||screen.orientation?.angle||0)===90;
   const deg=landscape?e.beta:e.gamma; if(deg==null) return;
-  el.hidden=false; const v=Math.round(deg*10)/10;
+  el.hidden=false; const v=Math.round(deg*10)/10; lastTilt=v;
   el.textContent=Math.abs(v)<1.5?"recht ✓":`scheef ${v>0?"+":""}${v.toFixed(1)}°`;
   el.classList.toggle("ok",Math.abs(v)<1.5);
 }
@@ -602,6 +748,10 @@ function slug(s){return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").
 async function exportAll(){
   const msg=$("#exportmsg"); const all=flat();
   const files=all.map((s,i)=>photos[s.id]?new File([photos[s.id].blob],`${slug(carName||"auto")}_${String(i+1).padStart(2,"0")}_${slug(s.n)}.jpg`,{type:"image/jpeg"}):null).filter(Boolean);
+  const base=slug(carName||"auto");
+  if(media["vid:coldstart"]) files.push(new File([media["vid:coldstart"].blob],`${base}_video_koude-start.mp4`,{type:media["vid:coldstart"].blob.type||"video/mp4"}));
+  if(media["vid:walk"]) files.push(new File([media["vid:walk"].blob],`${base}_video_walkaround.mp4`,{type:media["vid:walk"].blob.type||"video/mp4"}));
+  I("dmg",[]).forEach((d,i)=>{const m=media["dmg:"+d.id];if(m)files.push(new File([m.blob],`${base}_schade_${i+1}_${slug(d.note||"punt")}.jpg`,{type:"image/jpeg"}))});
   if(!files.length){msg.textContent="Nog geen foto's in deze sessie.";return}
   try{
     if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files,title:carName||"Autofoto's"});msg.textContent=`${files.length} foto's gedeeld.`;return}
@@ -611,6 +761,431 @@ async function exportAll(){
     msg.textContent=`${files.length} foto's worden gedownload. Werkt dit niet in deze preview, dan wel na plaatsen op GitHub.`;
   }catch(e){msg.textContent="Opslaan lukt niet in deze preview; na plaatsen op GitHub wel."}
 }
+
+/* =====================================================================
+   Keuring, rapport, kwaliteitscheck, spookbeeld, tekenen, gouden uur, Instagram
+   ===================================================================== */
+const media={};            // "vid:coldstart" | "vid:walk" | "dmg:<id>" -> {blob,url}
+let insp=store.get("hv-insp",{});
+function saveInsp(){store.set("hv-insp",insp)}
+function I(k,d){if(insp[k]==null)insp[k]=d;return insp[k]}
+let lastTilt=null, ghostOn=false;
+
+/* ---------- RDW ---------- */
+const RDW_BASE="https://opendata.rdw.nl/resource/";
+const normPlate=p=>String(p||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+function fmtPlate(p){
+  p=normPlate(p);
+  const parts=p.match(/[A-Z]+|[0-9]+/g)||[];
+  if(parts.length===2&&p.length===6){const a=parts[0],b=parts[1];return a.length===4?a.slice(0,2)+"-"+a.slice(2)+"-"+b:b.length===4?a+"-"+b.slice(0,2)+"-"+b.slice(2):a+"-"+b}
+  return parts.join("-");
+}
+function rdwDate(v){
+  if(!v) return null;
+  const s=String(v);
+  if(/^\d{8}$/.test(s)) return new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));
+  const d=new Date(s); return isNaN(d)?null:d;
+}
+const nlDate=d=>d?d.toLocaleDateString("nl-NL",{day:"numeric",month:"short",year:"numeric"}):"–";
+async function rdwLookup(){
+  const inp=$("#plate"), out=$("#rdwout"), plate=normPlate(inp.value);
+  if(plate.length<6){out.innerHTML=`<p class="note">Vul een volledig kenteken in.</p>`;return}
+  insp.plate=plate; saveInsp();
+  out.innerHTML=`<p class="note">RDW wordt geraadpleegd…</p>`;
+  try{
+    const [base,fuel]=await Promise.all([
+      fetch(`${RDW_BASE}m9d7-ebf2.json?kenteken=${plate}`).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}),
+      fetch(`${RDW_BASE}8ys7-d773.json?kenteken=${plate}`).then(r=>r.ok?r.json():[]).catch(()=>[])
+    ]);
+    if(!base.length){out.innerHTML=`<p class="note">Kenteken ${esc(fmtPlate(plate))} niet gevonden bij de RDW. Controleer de letters en cijfers.</p>`;return}
+    insp.rdw={...base[0],_fuel:fuel,_at:Date.now()}; saveInsp();
+    if(!carName){carName=[base[0].merk,base[0].handelsbenaming].filter(Boolean).join(" ")+" · "+fmtPlate(plate);store.set("hv-car",carName)}
+    render();
+  }catch(e){
+    out.innerHTML=`<p class="note">De RDW is nu niet bereikbaar. In de preview is internet geblokkeerd; in de geïnstalleerde app werkt het wel.</p>`;
+  }
+}
+function rdwFacts(r){
+  if(!r) return [];
+  const f=[], today=new Date(); today.setHours(0,0,0,0);
+  const fuel=(r._fuel||[]).map(x=>x.brandstof_omschrijving).filter(Boolean).join(" + ");
+  const kw=Math.max(0,...(r._fuel||[]).map(x=>parseFloat(x.nettomaximumvermogen)||0));
+  const add=(l,v,flag)=>{if(v!=null&&v!==""&&v!=="Niet geregistreerd")f.push({l,v:String(v),flag:flag||""})};
+  add("Merk / model",[r.merk,r.handelsbenaming].filter(Boolean).join(" "));
+  add("Soort",[r.voertuigsoort,r.inrichting].filter(Boolean).join(" · "));
+  add("Kleur",[r.eerste_kleur,r.tweede_kleur&&r.tweede_kleur!=="Niet geregistreerd"?r.tweede_kleur:""].filter(Boolean).join(" / "));
+  add("Brandstof",fuel);
+  if(kw) add("Vermogen",`${Math.round(kw)} kW (${Math.round(kw*1.362)} pk)`);
+  if(r.cilinderinhoud) add("Cilinderinhoud",`${r.cilinderinhoud} cc`);
+  if(r.massa_ledig_voertuig) add("Leeg gewicht",`${r.massa_ledig_voertuig} kg`);
+  const dt=rdwDate(r.datum_eerste_toelating), nl=rdwDate(r.datum_eerste_tenaamstelling_in_nederland);
+  add("Eerste toelating",dt?nlDate(dt):null);
+  if(nl&&dt&&(nl-dt)>45*864e5) add("Eerste keer in NL",nlDate(nl),"warn:Geïmporteerd: historie uit het buitenland apart opvragen");
+  const ten=rdwDate(r.datum_tenaamstelling); if(ten) add("Huidige eigenaar sinds",nlDate(ten));
+  const apk=rdwDate(r.vervaldatum_apk);
+  if(apk) add("APK geldig tot",nlDate(apk),apk<today?"bad:APK is verlopen":(apk-today)<60*864e5?"warn:APK verloopt binnen 2 maanden":"good:");
+  if(r.openstaande_terugroepactie_indicator) add("Openstaande terugroepactie",r.openstaande_terugroepactie_indicator,r.openstaande_terugroepactie_indicator==="Ja"?"bad:Laat de dealer de terugroepactie uitvoeren":"good:");
+  if(r.tellerstandoordeel) add("Tellerstandoordeel",r.tellerstandoordeel+(r.jaar_laatste_registratie_tellerstand?` (laatste registratie ${r.jaar_laatste_registratie_tellerstand})`:""),/logisch/i.test(r.tellerstandoordeel)&&!/onlogisch/i.test(r.tellerstandoordeel)?"good:":"warn:Kilometerstand nader controleren");
+  if(r.taxi_indicator==="Ja") add("Taxi","Ja","warn:Geweest of nog geregistreerd als taxi");
+  if(r.wam_verzekerd) add("WAM-verzekerd",r.wam_verzekerd,r.wam_verzekerd==="Nee"?"warn:":"");
+  if(r.catalogusprijs) add("Catalogusprijs",`€ ${Number(r.catalogusprijs).toLocaleString("nl-NL")}`);
+  return f;
+}
+function factsHTML(r){
+  const f=rdwFacts(r); if(!f.length) return "";
+  return `<div class="facts">${f.map(x=>{const [k,msg]=(x.flag||"").split(/:(.*)/s);return `<div class="fact ${k||""}"><span>${esc(x.l)}</span><b>${esc(x.v)}</b>${msg?`<em>${esc(msg)}</em>`:""}</div>`}).join("")}</div>`;
+}
+
+/* ---------- Metingen ---------- */
+const TYRES=[["lv","Linksvoor"],["rv","Rechtsvoor"],["la","Linksachter"],["ra","Rechtsachter"]];
+function tyreState(v){
+  v=parseFloat(String(v).replace(",","."));
+  if(isNaN(v)) return {k:"",t:""};
+  if(v<1.6) return {k:"bad",t:"onder wettelijk minimum (1,6 mm)"};
+  if(v<3) return {k:"warn",t:"binnenkort vervangen"};
+  return {k:"good",t:"goed"};
+}
+const PANELS=["Motorkap","Dak","Achterklep","Spatbord LV","Deur LV","Deur LA","Zijpaneel LA","Spatbord RV","Deur RV","Deur RA","Zijpaneel RA"];
+function paintStats(){
+  const p=I("paint",{}), vals=Object.values(p).map(v=>parseFloat(v)).filter(v=>v>0).sort((a,b)=>a-b);
+  const med=vals.length?vals[Math.floor(vals.length/2)]:null;
+  return {med,n:vals.length};
+}
+function paintState(v,med,n){
+  v=parseFloat(v); if(!(v>0)||!med||n<4) return {k:"",t:""};
+  if(v>=med*2.5||v-med>=250) return {k:"bad",t:"veel dikker dan de rest: waarschijnlijk reparatie"};
+  if(v>=med*1.6||v-med>=80) return {k:"warn",t:"dikker dan de rest: mogelijk overgespoten"};
+  return {k:"good",t:"in lijn met de rest"};
+}
+
+/* ---------- Schadekaart ---------- */
+function carTopSVG(markers,interactive){
+  return `<svg class="dmap" id="${interactive?"dmap":""}" viewBox="0 0 240 420" role="img" aria-label="Schadekaart, bovenaanzicht van de auto">
+   <text x="120" y="16" text-anchor="middle" class="dl">VOOR</text><text x="120" y="414" text-anchor="middle" class="dl">ACHTER</text>
+   <text x="10" y="214" class="dl">L</text><text x="224" y="214" class="dl">R</text>
+   <rect x="50" y="28" width="140" height="364" rx="46" class="db"/>
+   <path d="M62 120 Q120 100 178 120 L170 170 Q120 160 70 170 Z" class="dg"/>
+   <rect x="68" y="175" width="104" height="120" rx="10" class="dr"/>
+   <path d="M70 300 Q120 292 170 300 L176 340 Q120 352 64 340 Z" class="dg"/>
+   <line x1="50" y1="178" x2="190" y2="178" class="dpl"/><line x1="50" y1="240" x2="190" y2="240" class="dpl"/>
+   <rect x="34" y="70" width="18" height="46" rx="5" class="dw"/><rect x="188" y="70" width="18" height="46" rx="5" class="dw"/>
+   <rect x="34" y="300" width="18" height="46" rx="5" class="dw"/><rect x="188" y="300" width="18" height="46" rx="5" class="dw"/>
+   ${(markers||[]).map((m,i)=>`<g class="dm ${m.sev||"warn"}"><circle cx="${m.x}" cy="${m.y}" r="11"/><text x="${m.x}" y="${m.y+4}" text-anchor="middle">${i+1}</text></g>`).join("")}
+  </svg>`;
+}
+function addDamage(e){
+  const svg=$("#dmap"); if(!svg) return;
+  const pt=svg.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+  const p=pt.matrixTransform(svg.getScreenCTM().inverse());
+  const list=I("dmg",[]);
+  list.push({id:Date.now().toString(36),x:Math.round(p.x),y:Math.round(p.y),note:"",sev:"warn"});
+  saveInsp(); render();
+  setTimeout(()=>{const el=document.querySelector(`[data-dnote="${list[list.length-1].id}"]`);if(el)el.focus()},50);
+}
+
+/* ---------- Status per foto ---------- */
+const ST={ok:{l:"In orde",k:"good"},let:{l:"Let op",k:"warn"},afk:{l:"Afkeur",k:"bad"}};
+function statusUI(s){
+  if(mode!=="mb") return "";
+  const st=I("status",{})[s.id]||"", note=I("notes",{})[s.id]||"";
+  return `<div class="stbox"><div class="st" role="group" aria-label="Beoordeling">${Object.entries(ST).map(([k,v])=>`<button data-st="${s.id}" data-v="${k}" class="${v.k}" aria-pressed="${st===k}">${v.l}</button>`).join("")}</div>
+   <textarea class="snote" data-note="${s.id}" rows="2" placeholder="Notitie voor het rapport (optioneel)">${esc(note)}</textarea></div>`;
+}
+function qChips(id){
+  const q=(I("q",{})[id])||[];
+  return q.map(t=>`<span class="chip qw">⚠ ${esc(t)}</span>`).join("");
+}
+
+/* ---------- Kwaliteitscheck ---------- */
+async function qualityCheck(blob,shot){
+  try{
+    const bmp=await createImageBitmap(blob);
+    const W=480, H=Math.round(bmp.height*W/bmp.width);
+    const c=document.createElement("canvas"); c.width=W; c.height=H;
+    const x=c.getContext("2d",{willReadFrequently:true}); x.drawImage(bmp,0,0,W,H);
+    const d=x.getImageData(0,0,W,H).data, g=new Float32Array(W*H);
+    let sum=0, hi=0, lo=0;
+    for(let i=0,j=0;i<d.length;i+=4,j++){const v=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];g[j]=v;sum+=v;if(v>250)hi++;if(v<6)lo++}
+    const n=W*H, mean=sum/n;
+    // scherpte: variantie van de Laplace-operator in het midden (waar de auto staat)
+    const x0=Math.floor(W*.2),x1=Math.floor(W*.8),y0=Math.floor(H*.2),y1=Math.floor(H*.8);
+    let s1=0,s2=0,m=0;
+    for(let yy=y0;yy<y1;yy++)for(let xx=x0;xx<x1;xx++){const i=yy*W+xx;const L=g[i-1]+g[i+1]+g[i-W]+g[i+W]-4*g[i];s1+=L;s2+=L*L;m++}
+    const lapVar=s2/m-(s1/m)*(s1/m);
+    const flags=[];
+    if(lapVar<45) flags.push("mogelijk onscherp");
+    if(hi/n>0.06) flags.push("deels overbelicht");
+    if(mean<55&&lo/n>0.15) flags.push("te donker");
+    else if(mean>205) flags.push("te licht");
+    const ext=shot&&["side","front","rear","34f","34r"].includes(shot.ov);
+    if(ext&&lastTilt!=null&&Math.abs(lastTilt)>2) flags.push("scheef");
+    return flags;
+  }catch(e){return []}
+}
+
+/* ---------- Spookbeeld ---------- */
+async function makeGhost(blob){
+  try{
+    const bmp=await createImageBitmap(blob); const W=900, H=Math.round(bmp.height*W/bmp.width);
+    const c=document.createElement("canvas"); c.width=W; c.height=H; c.getContext("2d").drawImage(bmp,0,0,W,H);
+    return await new Promise(r=>c.toBlob(r,"image/jpeg",.7));
+  }catch(e){return null}
+}
+let ghostUrl=null;
+async function showGhost(){
+  const img=$("#ghost"); if(!img) return;
+  const s=flat()[camIdx];
+  if(ghostUrl){URL.revokeObjectURL(ghostUrl);ghostUrl=null}
+  if(!ghostOn){img.hidden=true;$("#c-ghost").setAttribute("aria-pressed","false");return}
+  $("#c-ghost").setAttribute("aria-pressed","true");
+  let b=photos[s.id]?.blob||await gdb.get(s.id);
+  if(!b){img.hidden=true;toast("Nog geen eerdere foto van deze hoek");return}
+  ghostUrl=URL.createObjectURL(b); img.src=ghostUrl; img.hidden=false;
+}
+
+/* ---------- Tekenen op foto ---------- */
+let an=null;
+function openAnnot(key){
+  const src=key.startsWith("dmg:")?media[key]:photos[key]; if(!src) return;
+  const box=$("#annot"); box.hidden=false; document.body.style.overflow="hidden";
+  const c=$("#acanvas"), img=new Image();
+  img.onload=()=>{
+    c.width=img.naturalWidth; c.height=img.naturalHeight;
+    an={key,img,shapes:[],tool:an?.tool||"arrow",cur:null}; redraw(); markTool();
+  };
+  img.src=src.url;
+}
+function redraw(){
+  const c=$("#acanvas"), x=c.getContext("2d"); x.drawImage(an.img,0,0);
+  const lw=Math.max(4,c.width*0.006);
+  [...an.shapes,an.cur].filter(Boolean).forEach(s=>{
+    x.lineCap="round";x.lineJoin="round";
+    for(const [col,w] of [["#ffffff",lw*1.9],["#ff2d2d",lw]]){
+      x.strokeStyle=col;x.lineWidth=w;x.beginPath();
+      if(s.t==="pen"){s.p.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]))}
+      if(s.t==="circle"){const [a,b]=s.p;x.ellipse((a[0]+b[0])/2,(a[1]+b[1])/2,Math.abs(b[0]-a[0])/2+1,Math.abs(b[1]-a[1])/2+1,0,0,Math.PI*2)}
+      if(s.t==="arrow"){const [a,b]=s.p;const ang=Math.atan2(b[1]-a[1],b[0]-a[0]),h=lw*6;x.moveTo(a[0],a[1]);x.lineTo(b[0],b[1]);x.moveTo(b[0],b[1]);x.lineTo(b[0]-h*Math.cos(ang-.45),b[1]-h*Math.sin(ang-.45));x.moveTo(b[0],b[1]);x.lineTo(b[0]-h*Math.cos(ang+.45),b[1]-h*Math.sin(ang+.45))}
+      x.stroke();
+    }
+  });
+}
+function markTool(){document.querySelectorAll("[data-tool]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tool===an.tool))}
+function canvasPt(e){const c=$("#acanvas"),r=c.getBoundingClientRect();return [(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]}
+async function saveAnnot(){
+  const c=$("#acanvas"), key=an.key;
+  const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.92));
+  const target=key.startsWith("dmg:")?media:photos;
+  if(!(await db.get("orig:"+key))) await db.put("orig:"+key,target[key].blob); // origineel bewaren
+  URL.revokeObjectURL(target[key].url); target[key]={blob,url:URL.createObjectURL(blob)};
+  await db.put(key,blob); closeAnnot(); toast("Markering opgeslagen"); render();
+}
+function closeAnnot(){$("#annot").hidden=true;document.body.style.overflow="";an&&(an.cur=null)}
+
+/* ---------- Video & schadefoto's ---------- */
+function setMedia(key,blob){
+  if(media[key]) URL.revokeObjectURL(media[key].url);
+  media[key]={blob,url:URL.createObjectURL(blob)}; db.put(key,blob);
+}
+const mb=b=>(b.size/1048576).toFixed(1).replace(".",",")+" MB";
+
+/* ---------- Keuring-tab ---------- */
+function keuringView(){
+  const r=insp.rdw, all=flat(), st=I("status",{});
+  const cnt={ok:0,let:0,afk:0}; Object.values(st).forEach(v=>cnt[v]!=null&&cnt[v]++);
+  const tyres=I("tyres",{}), paint=I("paint",{}), {med,n}=paintStats(), dmg=I("dmg",[]);
+  return `
+  <p class="lede">Alles voor het keuringsrapport. Vul in wat je meet; het rapport bouwt zich vanzelf op.</p>
+  <div class="card"><h3>Kenteken</h3>
+   <div class="row"><input id="plate" class="plate" autocomplete="off" autocapitalize="characters" placeholder="AB-123-C" value="${esc(insp.plate?fmtPlate(insp.plate):"")}"><button class="go" id="rdwbtn">RDW opzoeken</button></div>
+   <div id="rdwout">${r?factsHTML(r)+`<p class="note">Bron: RDW open data, opgehaald ${new Date(r._at).toLocaleString("nl-NL",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}.</p>`:`<p class="note">Haalt gratis merk, kleur, APK, terugroepacties en het tellerstandoordeel op bij de RDW.</p>`}</div>
+  </div>
+
+  <div class="card"><h3>Video</h3><p class="note">Een koude start laat geluiden horen die je op foto's mist. Start de motor pas als de camera loopt.</p>
+   ${[["coldstart","Koude start"],["walk","Walkaround"]].map(([k,l])=>{const m=media["vid:"+k];return `<div class="vrow"><label class="go small">${m?"Opnieuw":"Opnemen"}: ${l}<input type="file" accept="video/*" capture="environment" data-vid="${k}" hidden></label>${m?`<span class="chip ok">✓ ${mb(m.blob)}</span>`:""}</div>${m?`<video src="${m.url}" controls playsinline preload="metadata" class="vprev"></video>`:""}`}).join("")}
+  </div>
+
+  <div class="card"><h3>Banden <small class="note">profiel in mm</small></h3>
+   <div class="grid4">${TYRES.map(([k,l])=>{const s=tyreState(tyres[k]);return `<label class="meas ${s.k}"><span>${l}</span><input inputmode="decimal" data-tyre="${k}" value="${esc(tyres[k]||"")}" placeholder="0,0"><em>${s.t}</em></label>`}).join("")}</div>
+  </div>
+
+  <div class="card"><h3>Lakdikte <small class="note">µm per paneel</small></h3>
+   <p class="note">${n>=4?`Gemiddelde van deze auto (mediaan): <b>${med} µm</b>. Afwijkingen worden gemarkeerd.`:"Meet minstens 4 panelen; daarna markeert de app panelen die duidelijk dikker zijn dan de rest."}</p>
+   <div class="grid3">${PANELS.map(p=>{const s=paintState(paint[p],med,n);return `<label class="meas ${s.k}"><span>${p}</span><input inputmode="numeric" data-paint="${esc(p)}" value="${esc(paint[p]||"")}" placeholder="µm">${s.t?`<em>${s.t}</em>`:""}</label>`}).join("")}</div>
+  </div>
+
+  <div class="card"><h3>Schadekaart</h3><p class="note">Tik op de auto waar een schade zit. Geef per punt een notitie en maak er een foto bij.</p>
+   <div class="dwrap">${carTopSVG(dmg,true)}</div>
+   ${dmg.map((d,i)=>{const m=media["dmg:"+d.id];return `<div class="drow"><b class="dn ${d.sev}">${i+1}</b>
+     <div class="dfields"><input data-dnote="${d.id}" value="${esc(d.note)}" placeholder="bijv. kras achterbumper 5 cm">
+      <div class="st small">${Object.entries(ST).map(([k,v])=>`<button data-dsev="${d.id}" data-v="${v.k}" class="${v.k}" aria-pressed="${d.sev===v.k}">${v.l}</button>`).join("")}</div>
+      <div class="drow2"><label class="nav lite">${m?"Andere foto":"Foto"}<input type="file" accept="image/*" capture="environment" data-dphoto="${d.id}" hidden></label>${m?`<img class="thumb" src="${m.url}" data-annot="dmg:${d.id}" alt="Foto schade ${i+1}">`:""}<button class="nav lite" data-ddel="${d.id}">Verwijderen</button></div></div></div>`}).join("")}
+  </div>
+
+  <div class="card"><h3>Rapport</h3>
+   <p>${cnt.ok} in orde · ${cnt.let} let op · ${cnt.afk} afkeur · ${dmg.length} schadepunten · ${Object.keys(photos).length} foto's</p>
+   <p class="note">Beoordeel foto's in de shotlist met In orde / Let op / Afkeur en voeg notities toe.</p>
+   <label class="note" for="verdict">Eindoordeel</label>
+   <textarea id="verdict" class="snote" rows="3" placeholder="bijv. Nette auto, onderhoud aantoonbaar. Let op: remschijven voor binnen 5.000 km vervangen.">${esc(insp.verdict||"")}</textarea>
+   <button class="go" id="mkreport">Rapport bekijken</button>
+  </div>`;
+}
+
+/* ---------- Rapport ---------- */
+function openReport(){
+  const r=insp.rdw, all=flat(), st=I("status",{}), notes=I("notes",{}), tyres=I("tyres",{}), paint=I("paint",{}), {med,n}=paintStats(), dmg=I("dmg",[]);
+  const cnt={ok:0,let:0,afk:0}; Object.values(st).forEach(v=>cnt[v]!=null&&cnt[v]++);
+  const pill=k=>k?`<span class="rp ${ST[k].k}">${ST[k].l}</span>`:"";
+  const shots=all.filter(s=>photos[s.id]);
+  const issues=all.filter(s=>st[s.id]==="afk"||st[s.id]==="let");
+  const today=new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"long",year:"numeric"});
+  $("#rbody").innerHTML=`
+   <div class="rhead"><div><div class="rlogo">MB <span>Autoadvies</span></div><div class="rsub">Aankoopkeuring</div></div>
+    <div class="rmeta"><b>${esc(carName||"Auto")}</b>${insp.plate?`<span class="rplate">${esc(fmtPlate(insp.plate))}</span>`:""}<span>${today}</span></div></div>
+   <section><h2>Samenvatting</h2>
+    <div class="rcount"><span class="rp good">${cnt.ok} in orde</span><span class="rp warn">${cnt.let} let op</span><span class="rp bad">${cnt.afk} afkeur</span><span class="rp">${dmg.length} schadepunten</span></div>
+    ${insp.verdict?`<p class="rverdict">${esc(insp.verdict).replace(/\n/g,"<br>")}</p>`:""}
+    ${issues.length?`<ul class="rissues">${issues.map(s=>`<li>${pill(st[s.id])} <b>${esc(s.n)}</b>${notes[s.id]?` — ${esc(notes[s.id])}`:""}</li>`).join("")}</ul>`:""}
+   </section>
+   ${r?`<section><h2>RDW-gegevens</h2>${factsHTML(r)}<p class="rsmall">Bron: RDW open data, opgehaald ${new Date(r._at).toLocaleDateString("nl-NL")}.</p></section>`:""}
+   ${Object.keys(tyres).some(k=>tyres[k])||Object.keys(paint).some(k=>paint[k])?`<section><h2>Metingen</h2>
+    ${Object.keys(tyres).some(k=>tyres[k])?`<h3>Bandenprofiel</h3><table><tr>${TYRES.map(([k,l])=>`<th>${l}</th>`).join("")}</tr><tr>${TYRES.map(([k])=>{const s=tyreState(tyres[k]);return `<td class="${s.k}">${tyres[k]?esc(tyres[k])+" mm":"–"}<small>${s.t}</small></td>`}).join("")}</tr></table>`:""}
+    ${Object.keys(paint).some(k=>paint[k])?`<h3>Lakdikte (µm)${med?` · mediaan ${med}`:""}</h3><table class="rpaint">${PANELS.filter(p=>paint[p]).map(p=>{const s=paintState(paint[p],med,n);return `<tr><td>${esc(p)}</td><td class="${s.k}">${esc(paint[p])}</td><td><small>${s.t}</small></td></tr>`}).join("")}</table>`:""}
+   </section>`:""}
+   ${dmg.length?`<section class="rbreak"><h2>Schadekaart</h2><div class="rdmg">${carTopSVG(dmg,false)}<ol>${dmg.map(d=>`<li>${pill(d.sev==="good"?"ok":d.sev==="bad"?"afk":"let")} ${esc(d.note||"Geen omschrijving")}</li>`).join("")}</ol></div>
+    <div class="rgrid">${dmg.map((d,i)=>media["dmg:"+d.id]?`<figure><img src="${media["dmg:"+d.id].url}" alt=""><figcaption><b>${i+1}.</b> ${esc(d.note||"")}</figcaption></figure>`:"").join("")}</div></section>`:""}
+   ${media["vid:coldstart"]||media["vid:walk"]?`<section><h2>Video</h2><p>${[media["vid:coldstart"]?"Koude start":"",media["vid:walk"]?"Walkaround":""].filter(Boolean).join(" en ")} opgenomen; wordt apart meegestuurd.</p></section>`:""}
+   ${shots.length?`<section class="rbreak"><h2>Foto's</h2><div class="rgrid">${shots.map(s=>`<figure><img src="${photos[s.id].url}" alt=""><figcaption><b>${esc(s.n)}</b> ${pill(st[s.id])}${notes[s.id]?`<br>${esc(notes[s.id])}`:""}</figcaption></figure>`).join("")}</div></section>`:""}
+   <p class="rsmall rdisc">Deze keuring is een momentopname van de staat van de auto op de keuringsdatum, op basis van visuele inspectie, metingen en uitlezing. Verborgen gebreken die op dat moment niet waarneembaar waren, vallen buiten deze keuring.</p>`;
+  $("#report").hidden=false; document.body.style.overflow="hidden"; $("#report").scrollTop=0;
+}
+
+/* ---------- Gouden uur ---------- */
+function sunElev(t,lat,lon){
+  const rad=Math.PI/180, d=(t-Date.UTC(2000,0,1,12))/864e5;
+  const g=(357.529+0.98560028*d)*rad, q=280.459+0.98564736*d;
+  const L=(q+1.915*Math.sin(g)+0.020*Math.sin(2*g))*rad, e=(23.439-0.00000036*d)*rad;
+  const ra=Math.atan2(Math.cos(e)*Math.sin(L),Math.cos(L)), dec=Math.asin(Math.sin(e)*Math.sin(L));
+  const gmst=((18.697374558+24.06570982441908*d)%24+24)%24;
+  const ha=(gmst*15+lon)*rad-ra;
+  return Math.asin(Math.sin(lat*rad)*Math.sin(dec)+Math.cos(lat*rad)*Math.cos(dec)*Math.cos(ha))/rad;
+}
+function sunTimes(day,lat,lon){
+  const start=new Date(day); start.setHours(0,0,0,0);
+  const cross=(lvl,rising)=>{let prev=sunElev(start.getTime(),lat,lon);for(let m=1;m<=1440;m++){const t=start.getTime()+m*6e4,e=sunElev(t,lat,lon);if(rising?(prev<lvl&&e>=lvl):(prev>=lvl&&e<lvl))return new Date(t);prev=e}return null};
+  return {rise:cross(-0.833,true),set:cross(-0.833,false),gmS:cross(-4,true),gmE:cross(6,true),geS:cross(6,false),geE:cross(-4,false)};
+}
+const hm=d=>d?d.toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"}):"–";
+async function goldenHour(useSaved){
+  const out=$("#ghout"); if(!out) return;
+  let loc=store.get("hv-loc",null);
+  if(!useSaved||!loc){
+    out.innerHTML=`<p class="note">Locatie ophalen…</p>`;
+    try{loc=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(p=>res({lat:+p.coords.latitude.toFixed(3),lon:+p.coords.longitude.toFixed(3)}),rej,{timeout:10000,maximumAge:6e5}))}
+    catch(e){out.innerHTML=`<p class="note">Geen locatie beschikbaar. In de preview is locatie geblokkeerd; in de geïnstalleerde app vraagt hij om toestemming.</p>`;return}
+    store.set("hv-loc",loc);
+  }
+  const now=new Date(); let day=new Date(now), t=sunTimes(day,loc.lat,loc.lon);
+  if(t.geE&&now>t.geE){day.setDate(day.getDate()+1);t=sunTimes(day,loc.lat,loc.lon)}
+  const isTomorrow=day.getDate()!==now.getDate();
+  let clouds=null;
+  try{
+    const j=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&hourly=cloud_cover&timezone=auto&forecast_days=3`).then(r=>r.json());
+    clouds=d=>{if(!d)return null;const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}T${String(d.getHours()).padStart(2,"0")}:00`;const i=j.hourly.time.indexOf(key);return i>=0?j.hourly.cloud_cover[i]:null};
+  }catch(e){}
+  const cl=d=>{const c=clouds&&clouds(d);if(c==null)return "";return c<25?`<span class="chip">${c}% bewolkt · zonnig, mooi strijklicht</span>`:c<70?`<span class="chip">${c}% bewolkt · wisselend</span>`:`<span class="chip ok">${c}% bewolkt · zacht licht, ideaal voor advertentie en keuring</span>`};
+  out.innerHTML=`<div class="gh">
+    <div><span>Ochtend gouden uur${isTomorrow?" (morgen)":""}</span><b>${hm(t.gmS)}–${hm(t.gmE)}</b>${cl(t.gmS)}</div>
+    <div><span>Avond gouden uur${isTomorrow?" (morgen)":""}</span><b>${hm(t.geS)}–${hm(t.geE)}</b>${cl(t.geS)}</div>
+    <div><span>Zon op / onder</span><b>${hm(t.rise)} / ${hm(t.set)}</b>${cl(new Date())?`<span class="note">Nu: </span>${cl(new Date())}`:""}</div>
+   </div><p class="note">Berekend voor jouw locatie. Bewolking via Open-Meteo.</p>`;
+}
+
+/* ---------- Instagram ---------- */
+function instaView(){
+  const taken=flat().filter(s=>photos[s.id]);
+  const sel=I("igsel",{}), words=(carName||"").toLowerCase().split(/[^a-z0-9]+/).filter(w=>w.length>1&&!/^\d+$/.test(w));
+  const tags=[...new Set([...words.map(w=>"#"+w),"#carphotography","#carsofinstagram","#automotivephotography","#carspotting","#pixel10pro","#shotonpixel"])].join(" ");
+  const cap=insp.igcap??`${carName||"Mijn auto"} 📸\n\nGeschoten op de Pixel 10 Pro.\n\n${tags}`;
+  return `
+  <p class="lede">Zet je foto's om naar het 4:5-formaat van Instagram, in de juiste carrouselvolgorde.</p>
+  <div class="card"><h3>Foto's kiezen</h3>
+   ${taken.length?`<div class="igpick">${taken.map((s,i)=>`<label class="igp"><input type="checkbox" data-ig="${s.id}" ${sel[s.id]!==false?"checked":""}><img src="${photos[s.id].url}" alt=""><span>${i+1}. ${esc(s.n)}</span></label>`).join("")}</div>`:`<p class="note">Nog geen foto's. Maak eerst je set in de shotlist.</p>`}
+   <div class="lakrow" style="margin-top:12px"><span>Formaat</span><div class="mode" role="group" aria-label="Formaat">
+    <button data-igfit="crop" aria-pressed="${(insp.igfit||"crop")==="crop"}">Bijsnijden</button><button data-igfit="blur" aria-pressed="${insp.igfit==="blur"}">Met wazige rand</button></div></div>
+   <button class="go" id="igexport" ${taken.length?"":"disabled"}>Exporteer 4:5 (1080×1350)</button><p class="note" id="igmsg"></p>
+  </div>
+  <div class="card"><h3>Caption</h3>
+   <div class="prompt"><textarea id="igcap" rows="7">${esc(cap)}</textarea><button id="igcopy">Kopiëren</button></div>
+  </div>`;
+}
+async function to45(blob,fit){
+  const bmp=await createImageBitmap(blob), W=1080, H=1350, c=document.createElement("canvas"); c.width=W; c.height=H;
+  const x=c.getContext("2d");
+  const cover=Math.max(W/bmp.width,H/bmp.height), contain=Math.min(W/bmp.width,H/bmp.height);
+  if(fit==="blur"){
+    x.filter="blur(40px) brightness(.7)"; const w=bmp.width*cover,h=bmp.height*cover; x.drawImage(bmp,(W-w)/2,(H-h)/2,w,h); x.filter="none";
+    const w2=bmp.width*contain,h2=bmp.height*contain; x.drawImage(bmp,(W-w2)/2,(H-h2)/2,w2,h2);
+  } else { const w=bmp.width*cover,h=bmp.height*cover; x.drawImage(bmp,(W-w)/2,(H-h)/2,w,h); }
+  return await new Promise(r=>c.toBlob(r,"image/jpeg",.93));
+}
+async function igExport(){
+  const msg=$("#igmsg"), sel=I("igsel",{});
+  const list=flat().filter(s=>photos[s.id]&&sel[s.id]!==false).slice(0,20);
+  if(!list.length){msg.textContent="Kies minstens één foto.";return}
+  msg.textContent="Bezig met omzetten…";
+  const files=[];
+  for(const [i,s] of list.entries()){const b=await to45(photos[s.id].blob,insp.igfit||"crop");files.push(new File([b],`ig_${String(i+1).padStart(2,"0")}_${slug(s.n)}.jpg`,{type:"image/jpeg"}))}
+  await shareFiles(files,msg,"Instagram");
+}
+async function shareFiles(files,msg,title){
+  try{ if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files,title});msg.textContent=`${files.length} bestanden gedeeld.`;return} }catch(e){ if(e.name==="AbortError"){msg.textContent="";return} }
+  try{ files.forEach((f,i)=>setTimeout(()=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove()},i*350)); msg.textContent=`${files.length} bestanden worden gedownload.`; }
+  catch(e){ msg.textContent="Opslaan lukt niet in deze preview; in de geïnstalleerde app wel."; }
+}
+
+/* ---------- Koppelingen voor de extra tabbladen ---------- */
+function bindExtra(){
+  const on=(sel,ev,fn)=>document.querySelectorAll(sel).forEach(el=>el.addEventListener(ev,fn));
+  const rb=$("#rdwbtn"); if(rb) rb.onclick=rdwLookup;
+  const pl=$("#plate"); if(pl) pl.onkeydown=e=>{if(e.key==="Enter")rdwLookup()};
+  on("[data-vid]","change",e=>{const f=e.target.files[0];if(f){setMedia("vid:"+e.target.dataset.vid,f);render()}});
+  on("[data-tyre]","change",e=>{I("tyres",{})[e.target.dataset.tyre]=e.target.value.trim();saveInsp();render()});
+  on("[data-paint]","change",e=>{I("paint",{})[e.target.dataset.paint]=e.target.value.trim();saveInsp();render()});
+  const dm=$("#dmap"); if(dm) dm.addEventListener("click",addDamage);
+  on("[data-dnote]","input",e=>{const d=I("dmg",[]).find(x=>x.id===e.target.dataset.dnote);if(d){d.note=e.target.value;saveInsp()}});
+  on("[data-dsev]","click",e=>{const d=I("dmg",[]).find(x=>x.id===e.currentTarget.dataset.dsev);if(d){d.sev=e.currentTarget.dataset.v;saveInsp();render()}});
+  on("[data-dphoto]","change",e=>{const f=e.target.files[0];if(f){setMedia("dmg:"+e.target.dataset.dphoto,f);render()}});
+  on("[data-ddel]","click",e=>{const b=e.currentTarget;if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Zeker?";return}insp.dmg=I("dmg",[]).filter(x=>x.id!==b.dataset.ddel);saveInsp();render()});
+  on("[data-annot]","click",e=>openAnnot(e.currentTarget.dataset.annot));
+  on("[data-st]","click",e=>{const b=e.currentTarget,m=I("status",{});m[b.dataset.st]=m[b.dataset.st]===b.dataset.v?"":b.dataset.v;saveInsp();
+    b.parentElement.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v===m[b.dataset.st]));
+    const sum=b.closest("details")?.querySelector(".num"); if(sum) sum.dataset.st=m[b.dataset.st]||"";});
+  on("[data-note]","input",e=>{I("notes",{})[e.target.dataset.note]=e.target.value;saveInsp()});
+  const vd=$("#verdict"); if(vd) vd.oninput=e=>{insp.verdict=e.target.value;saveInsp()};
+  const mr=$("#mkreport"); if(mr) mr.onclick=openReport;
+  const gb=$("#ghbtn"); if(gb) gb.onclick=()=>goldenHour(false);
+  if($("#ghout")&&store.get("hv-loc",null)) goldenHour(true);
+  on("[data-ig]","change",e=>{I("igsel",{})[e.target.dataset.ig]=e.target.checked;saveInsp()});
+  on("[data-igfit]","click",e=>{insp.igfit=e.currentTarget.dataset.igfit;saveInsp();render()});
+  const ie=$("#igexport"); if(ie) ie.onclick=igExport;
+  const ic=$("#igcap"); if(ic) ic.oninput=e=>{insp.igcap=e.target.value;saveInsp()};
+  const icp=$("#igcopy"); if(icp) icp.onclick=()=>{const t=$("#igcap").value;navigator.clipboard?.writeText(t).then(()=>icp.textContent="Gekopieerd",()=>{$("#igcap").select()})};
+}
+
+/* ---------- Overlays: rapport en tekenen ---------- */
+$("#rclose").onclick=()=>{$("#report").hidden=true;document.body.style.overflow=""};
+$("#rprint").onclick=()=>{try{window.print()}catch(e){} };
+document.querySelectorAll("[data-tool]").forEach(b=>b.onclick=()=>{an.tool=b.dataset.tool;markTool()});
+$("#aundo").onclick=()=>{an.shapes.pop();redraw()};
+$("#acancel").onclick=closeAnnot;
+$("#asave").onclick=saveAnnot;
+(()=>{const c=$("#acanvas");let down=false;
+  c.addEventListener("pointerdown",e=>{if(!an)return;down=true;c.setPointerCapture(e.pointerId);const p=canvasPt(e);an.cur={t:an.tool,p:an.tool==="pen"?[p]:[p,p]};redraw()});
+  c.addEventListener("pointermove",e=>{if(!down||!an.cur)return;const p=canvasPt(e);if(an.cur.t==="pen")an.cur.p.push(p);else an.cur.p[1]=p;redraw()});
+  const up=()=>{if(!down)return;down=false;if(an.cur){an.shapes.push(an.cur);an.cur=null;redraw()}};
+  c.addEventListener("pointerup",up);c.addEventListener("pointercancel",up);
+})();
+$("#c-ghost").onclick=e=>{e.stopPropagation();ghostOn=!ghostOn;showGhost()};
 
 /* ---------- Events ---------- */
 $("#m-mb").onclick=()=>{mode="mb";store.set("hv-mode",mode);render()};
@@ -626,21 +1201,23 @@ $("#file2").onchange=e=>{const f=e.target.files[0]; if(f) savePhoto(f); e.target
 document.addEventListener("keydown",e=>{if(!$("#cam").hidden&&e.key==="Escape")closeCam()});
 
 /* ---------- Foto's bewaren op het toestel (IndexedDB) ---------- */
-const db=(()=>{
+const makeStore=NAME=>{
   let p=null;
-  const open=()=>p||(p=new Promise((res,rej)=>{try{const r=indexedDB.open("hoekvast",1);r.onupgradeneeded=()=>r.result.createObjectStore("photos");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}));
+  const open=()=>p||(p=new Promise((res,rej)=>{try{const r=indexedDB.open(NAME,1);r.onupgradeneeded=()=>r.result.createObjectStore("photos");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}));
   const tx=(m,fn)=>open().then(d=>new Promise((res,rej)=>{const t=d.transaction("photos",m);const st=t.objectStore("photos");const out=fn(st);t.oncomplete=()=>res(out&&out.result);t.onerror=()=>rej(t.error)})).catch(()=>null);
   return{
     put:(k,v)=>tx("readwrite",st=>st.put(v,k)),
+    get:k=>tx("readonly",st=>st.get(k)),
     clear:()=>tx("readwrite",st=>st.clear()),
     load:()=>open().then(d=>new Promise(res=>{const out={};const t=d.transaction("photos");const c=t.objectStore("photos").openCursor();c.onsuccess=()=>{const cur=c.result;if(cur){out[cur.key]=cur.value;cur.continue()}else res(out)};c.onerror=()=>res(out)})).catch(()=>({}))
   };
-})();
+};
+const db=makeStore("hoekvast"), gdb=makeStore("hoekvast-ghost");
 
 render();
 db.load().then(saved=>{
   let n=0;
-  for(const [k,b] of Object.entries(saved||{})){ if(b instanceof Blob){photos[k]={blob:b,url:URL.createObjectURL(b)};doneIds.add(k);n++} }
+  for(const [k,b] of Object.entries(saved||{})){ if(!(b instanceof Blob)||k.startsWith("orig:")) continue; if(k.startsWith("vid:")||k.startsWith("dmg:")){media[k]={blob:b,url:URL.createObjectURL(b)};n++;continue} photos[k]={blob:b,url:URL.createObjectURL(b)};doneIds.add(k);n++ }
   if(n){store.set("hv-done",[...doneIds]);render()}
 });
 
