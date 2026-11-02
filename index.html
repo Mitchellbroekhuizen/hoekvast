@@ -110,6 +110,14 @@ h2 small{font:500 12px var(--f-mono);color:var(--mute);letter-spacing:.06em;marg
 .cbar .x{border:1px solid #fff5;background:#0008;color:#fff;border-radius:999px;width:40px;height:40px;flex:none;font-size:20px}
 .hud{position:absolute;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 92px);display:flex;flex-wrap:wrap;gap:6px}
 .hud .chip.warn{color:var(--warn);border-color:var(--warn)}
+.prof{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.prof .chip{background:#000a;color:#fff;border-color:#fff4}
+.prof .chip.on{color:var(--ok);border-color:var(--ok)}
+.prof .chip.off{color:#888;text-decoration:line-through}
+.prof button.chip{cursor:pointer;color:var(--tape);border-color:var(--tape)}
+.fring{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border:2px solid var(--tape);border-radius:50%;pointer-events:none;transition:transform .3s,opacity .6s}
+.lakrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.lakrow span{font:500 12px var(--f-mono);color:var(--mute);text-transform:uppercase;letter-spacing:.08em}
 .zoom{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:6px;background:#000a;padding:5px;border-radius:999px}
 .zoom button{border:0;background:none;color:#fff;width:42px;height:42px;border-radius:50%;font:600 13px var(--f-mono)}
 .zoom button[aria-pressed="true"]{background:var(--tape);color:var(--tape-ink)}
@@ -248,6 +256,86 @@ let carName=store.get("hv-car","");
 const photos={}; // id -> {url, blob}
 let doneIds=new Set(store.get("hv-done",[]));
 let camIdx=0, stream=null, levelOn=false, track=null, imgCap=null, zoomCaps=null, curZoom=1;
+let camAuto=false, profToken=0, lak=store.get("hv-lak","mid");
+const LAK={donker:{l:"Donker",ev:0.3},mid:{l:"Midden",ev:0},licht:{l:"Licht / wit",ev:-0.5}};
+const TORCH=new Set(["under","engine","brakes"]);
+const SCREEN=new Set(["odo","obd"]);
+const PIXEL_ONLY=new Set(["night","roll"]);
+
+/* Camera-instellingen per foto */
+function profileFor(s){
+  const ev0=LAK[lak]?.ev??0;
+  if(SCREEN.has(s.id)) return {iso:null,ev:-0.7,wb:null,torch:false,why:"scherm niet laten uitbranden"};
+  if(s.ov==="interior") return {iso:null,ev:0.3,wb:null,torch:false,why:"donker interieur iets lichter"};
+  if(["side","front","rear","34f","34r"].includes(s.ov)) return {iso:100,ev:ev0,wb:5500,torch:false,why:"lage ruis op de lak, vaste kleur voor de hele set"};
+  return {iso:100,ev:+(ev0/2).toFixed(1),wb:5500,torch:TORCH.has(s.id),why:"detail scherp en ruisvrij"};
+}
+const fmtEv=v=>(v>0?"+":v<0?"−":"±")+Math.abs(v).toFixed(1).replace(".",",");
+function profText(s){
+  if(PIXEL_ONLY.has(s.id)) return "Gebruik de Pixel-app: lange sluitertijd kan niet in de browser.";
+  const p=profileFor(s);
+  return [p.iso?`ISO ${p.iso}`:"ISO auto",`belichting ${fmtEv(p.ev)}`,p.wb?`${p.wb} K`:"witbalans auto","scherpte auto (tik om scherp te stellen)",p.torch?"lamp aan":""].filter(Boolean).join(" · ");
+}
+async function applyProfile(s){
+  const box=$("#prof"); if(!box) return;
+  if(!track){box.innerHTML="";return}
+  const my=++profToken, caps=(track.getCapabilities&&track.getCapabilities())||{}, out=[];
+  const tryC=async c=>{try{await track.applyConstraints({advanced:[c]});return true}catch(e){return false}};
+  const clamp=(v,r)=>r?Math.min(r.max,Math.max(r.min,v)):v;
+  const has=(k,v)=>Array.isArray(caps[k])&&caps[k].includes(v);
+  if(camAuto){
+    if(has("exposureMode","continuous")) await tryC({exposureMode:"continuous"});
+    if(caps.exposureCompensation) await tryC({exposureCompensation:0});
+    if(has("whiteBalanceMode","continuous")) await tryC({whiteBalanceMode:"continuous"});
+    if(has("focusMode","continuous")) await tryC({focusMode:"continuous"});
+    if(caps.torch) await tryC({torch:false});
+    if(my===profToken) box.innerHTML=`<button class="chip" id="p-toggle">Camera-auto · tik voor profiel</button>`;
+    bindToggle(s); return;
+  }
+  if(PIXEL_ONLY.has(s.id)){ box.innerHTML=`<span class="chip off">Tip: deze foto met de Pixel-app</span><button class="chip" id="p-toggle">Profiel</button>`; bindToggle(s); return; }
+  const p=profileFor(s);
+  // scherpte
+  if(has("focusMode","continuous")) out.push(["Scherpte auto",await tryC({focusMode:"continuous"})]); else out.push(["Scherpte",false]);
+  // belichting
+  if(has("exposureMode","continuous")) await tryC({exposureMode:"continuous"});
+  if(caps.exposureCompensation){const st=caps.exposureCompensation.step||0.1;const v=Math.round(clamp(p.ev,caps.exposureCompensation)/st)*st;out.push([`EV ${fmtEv(v)}`,await tryC({exposureCompensation:v})])}
+  else out.push([`EV ${fmtEv(p.ev)}`,false]);
+  // witbalans
+  if(p.wb){ if(caps.colorTemperature&&has("whiteBalanceMode","manual")) out.push([`${p.wb} K`,await tryC({whiteBalanceMode:"manual",colorTemperature:clamp(p.wb,caps.colorTemperature)})]); else out.push([`${p.wb} K`,false]); }
+  else if(has("whiteBalanceMode","continuous")) await tryC({whiteBalanceMode:"continuous"});
+  // lamp
+  if(caps.torch) { const ok=await tryC({torch:!!p.torch}); if(p.torch) out.push(["Lamp",ok]); } else if(p.torch) out.push(["Lamp",false]);
+  // ISO: eerst automaat laten meten, dan dezelfde helderheid vastzetten met lage ISO
+  if(p.iso){
+    if(caps.iso&&caps.exposureTime&&has("exposureMode","manual")){
+      await new Promise(r=>setTimeout(r,500)); if(my!==profToken) return;
+      const st=track.getSettings?track.getSettings():{};
+      if(st.iso&&st.exposureTime){
+        const maxT=Math.min(caps.exposureTime.max,333); // 1/30 s uit de hand
+        let iso=clamp(p.iso,caps.iso), t=st.exposureTime*st.iso/iso*Math.pow(2,p.ev);
+        if(t>maxT){ iso=clamp(Math.round(st.iso*st.exposureTime*Math.pow(2,p.ev)/maxT),caps.iso); t=maxT; }
+        t=clamp(t,caps.exposureTime);
+        out.push([`ISO ${Math.round(iso)}`,await tryC({exposureMode:"manual",iso,exposureTime:t})]);
+      } else out.push([`ISO ${p.iso}`,false]);
+    } else out.push([`ISO ${p.iso}`,false]);
+  }
+  if(my!==profToken) return;
+  box.innerHTML=out.map(([l,ok])=>`<span class="chip ${ok?"on":"off"}" title="${ok?"ingesteld":"niet ondersteund door de browser"}">${esc(l)}</span>`).join("")+`<button class="chip" id="p-toggle">Auto</button>`;
+  bindToggle(s);
+}
+function bindToggle(s){const b=$("#p-toggle");if(b)b.onclick=()=>{camAuto=!camAuto;applyProfile(s)}}
+function tapFocus(e){
+  if(!track||e.target.closest("button,label,.cbar,.zoom,.hud")) return;
+  const v=$("#video"), r=v.getBoundingClientRect();
+  const vw=v.videoWidth||r.width, vh=v.videoHeight||r.height, sc=Math.max(r.width/vw,r.height/vh);
+  const dw=vw*sc, dh=vh*sc, ox=(dw-r.width)/2, oy=(dh-r.height)/2;
+  const x=Math.min(1,Math.max(0,(e.clientX-r.left+ox)/dw)), y=Math.min(1,Math.max(0,(e.clientY-r.top+oy)/dh));
+  const ring=document.createElement("div"); ring.className="fring"; ring.style.left=(e.clientX-r.left)+"px"; ring.style.top=(e.clientY-r.top)+"px";
+  $("#vf").appendChild(ring); setTimeout(()=>{ring.style.transform="scale(.7)"},20); setTimeout(()=>{ring.style.opacity=0},700); setTimeout(()=>ring.remove(),1400);
+  const caps=(track.getCapabilities&&track.getCapabilities())||{};
+  const mode=Array.isArray(caps.focusMode)&&caps.focusMode.includes("single-shot")?"single-shot":"continuous";
+  track.applyConstraints({advanced:[{pointsOfInterest:[{x,y}],focusMode:mode}]}).catch(()=>{});
+}
 
 const $=s=>document.querySelector(s);
 const flat=()=>SHOTS[mode].flatMap(g=>g.items);
@@ -315,6 +403,7 @@ function listView(){
    ?"Vaste volgorde voor elke keuring: eerst het rondje om de auto voor de advertentieset, dan identiteit, techniek en interieur. Zo mis je niets en is elk rapport hetzelfde opgebouwd."
    :"Set voor je eigen auto en Instagram. Exterieur liefst op 5x van ver weg en laag: dat geeft de stoere, gecomprimeerde look.";
   return `<div class="car"><label for="carname">Auto</label><input id="carname" placeholder="bijv. ${mode==="mb"?"Alpina B5 · kenteken":"Octavia VRS"}" value="${esc(carName)}"></div>
+  <div class="lakrow"><span>Lakkleur</span><div class="mode" role="group" aria-label="Lakkleur">${Object.entries(LAK).map(([k,v])=>`<button data-lak="${k}" aria-pressed="${k===lak}">${v.l}</button>`).join("")}</div></div>
   <div class="progress"><div class="bar"><i style="width:${all.length?done/all.length*100:0}%"></i></div><span>${done}/${all.length}</span></div>
   <p class="lede">${intro}</p>
   ${SHOTS[mode].map(g=>`<h2>${esc(g.g)} <small>${g.items.length} foto's</small></h2>
@@ -323,7 +412,7 @@ function listView(){
      <span class="chips"><span class="chip lens">${esc(s.lens)}</span>${s.d>0?`<span class="chip h">${s.d} m</span>`:""}</span></summary>
     <div class="body"><div class="plan">${planSVG(s)}</div>
      <div style="min-width:0">
-      <dl class="spec"><dt>Zo</dt><dd>${esc(s.how)}</dd><dt>Hoogte</dt><dd>${esc(s.h)}</dd><dt>Lens</dt><dd>${esc(s.lens)}${s.lens==="0.5x"?" (alleen hier, binnen of onder de auto)":""}</dd>${s.tip?`<dt>Tip</dt><dd>${esc(s.tip)}</dd>`:""}</dl>
+      <dl class="spec"><dt>Zo</dt><dd>${esc(s.how)}</dd><dt>Hoogte</dt><dd>${esc(s.h)}</dd><dt>Camera</dt><dd>${esc(profText(s))}</dd><dt>Lens</dt><dd>${esc(s.lens)}${s.lens==="0.5x"?" (alleen hier, binnen of onder de auto)":""}</dd>${s.tip?`<dt>Tip</dt><dd>${esc(s.tip)}</dd>`:""}</dl>
       ${s.why?`<p class="why">${esc(s.why)}</p>`:""}
       ${s.ai?`<p class="ai"><b>AI-klaar:</b> ${esc(s.ai)}</p>`:""}
       <button class="go" data-shoot="${i}">Fotograferen</button>${photos[s.id]?`<img class="thumb" src="${photos[s.id].url}" alt="Gemaakte foto ${esc(s.n)}">`:""}
@@ -359,6 +448,9 @@ function pixelView(){return `
   <b>Scherpte</b><span>Handmatig bij remschijven en door ruiten: focus-peaking laat zien wat scherp is.</span>
   <b>Sluitertijd</b><span>Rolling shot 1/30–1/60 s. Statief bij nacht: lang. Overdag laat je hem automatisch.</span>
  </div></div>
+ <h2>Automatisch in de app-camera</h2>
+ <div class="card"><p>Met de gele knop zet Hoekvast per foto zelf de camera klaar: lage ISO, belichting afgestemd op de lakkleur, vaste witbalans voor de hele set, lamp aan bij motorruimte en remmen. Tik in de zoeker om scherp te stellen.</p>
+ <p class="note">In de zoeker zie je welke instellingen gelukt zijn (groen) en welke je telefoon via de browser niet toestaat (doorgestreept). Met <b>Auto</b> schakel je terug naar de automatische stand. De Pixel-app kan een web-app niet vooraf instellen; daar stel je het zelf in met de tabel hierboven.</p></div>
  <div class="card"><h3>Camera Coach</h3><p>De Pixel 10 Pro heeft Camera Coach (Gemini) die tips geeft over kader en hoek. Handig als tweede check, maar de shotlist hier is leidend zodat elke set hetzelfde wordt.</p></div>`}
 function lightView(){return `
  <p class="lede">Licht bepaalt 80% van het resultaat. Een goede plek scheelt meer dan elke bewerking.</p>
@@ -407,6 +499,7 @@ function bindMain(){
     const t=b.dataset.copy;
     navigator.clipboard?.writeText(t).then(()=>{b.textContent="Gekopieerd"},()=>selectText(b.previousElementSibling));
   });
+  document.querySelectorAll("[data-lak]").forEach(b=>b.onclick=()=>{lak=b.dataset.lak;store.set("hv-lak",lak);render()});
   const ex=$("#export"); if(ex) ex.onclick=exportAll;
   const rs=$("#reset"); if(rs) rs.onclick=()=>{
     if(rs.dataset.sure){doneIds=new Set();store.set("hv-done",[]);Object.keys(photos).forEach(k=>{URL.revokeObjectURL(photos[k].url);delete photos[k]});db.clear();carName="";store.set("hv-car","");render()}
@@ -443,6 +536,8 @@ function showShot(){
   const can=!stream||!zs.length||zs.includes(want);
   $("#hud").innerHTML=`<span class="chip lens">${esc(s.lens)}</span><span class="chip">${esc(s.h)}</span>${s.d>0?`<span class="chip">± ${s.d} m</span>`:""}${!can?`<span class="chip warn">${esc(s.lens)} niet in browser: gebruik Pixel-app</span>`:""}`;
   renderZoom(want);
+  $("#hud").insertAdjacentHTML("beforeend",'<div class="prof" id="prof"></div>');
+  applyProfile(s);
   $("#fb").innerHTML=`<svg viewBox="0 0 1600 900" style="background:#111">${overlay(s.ov)}</svg><p>Live zoeker is hier niet beschikbaar. Kijk naar het kader hierboven en tik op de gele knop of op Pixel-app om de foto te maken.<br>Op GitHub Pages krijg je de live zoeker met kader en zoomknoppen.</p>`;
   const p=photos[s.id]; const mini=$("#mini"); mini.hidden=!p; if(p) mini.src=p.url;
   $("#c-prev").disabled=camIdx===0; $("#c-next").textContent=camIdx===flat().length-1?"✓":"›";
@@ -472,7 +567,7 @@ function renderZoom(want){
   const target=zs.includes(want)?want:zs.reduce((a,b)=>Math.abs(b-want)<Math.abs(a-want)?b:a);
   setZoom(target);
   el.innerHTML=zs.map(z=>`<button data-z="${z}" aria-pressed="${z===curZoom}">${z}x</button>`).join("");
-  el.querySelectorAll("button").forEach(b=>b.onclick=()=>{setZoom(+b.dataset.z);renderZoom(+b.dataset.z)});
+  el.querySelectorAll("button").forEach(b=>b.onclick=()=>{setZoom(+b.dataset.z);renderZoom(+b.dataset.z);applyProfile(flat()[camIdx])});
 }
 function setZoom(z){
   curZoom=z;
@@ -522,6 +617,7 @@ $("#m-mb").onclick=()=>{mode="mb";store.set("hv-mode",mode);render()};
 $("#m-own").onclick=()=>{mode="own";store.set("hv-mode",mode);render()};
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();scrollTo(0,0)});
 $("#c-close").onclick=closeCam;
+$("#vf").addEventListener("click",tapFocus);
 $("#c-prev").onclick=()=>{if(camIdx>0){camIdx--;showShot()}};
 $("#c-next").onclick=()=>{if(camIdx<flat().length-1){camIdx++;showShot()}else closeCam()};
 $("#shutter").onclick=e=>{ if(stream){e.preventDefault();capture()} };
