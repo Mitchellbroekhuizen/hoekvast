@@ -1,5 +1,5 @@
 // Hoekvast service worker: app werkt ook zonder internet (bijv. op een parkeerterrein)
-const CACHE = "hoekvast-v1";
+const CACHE = "hoekvast-v2";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/maskable-512.png"];
 
 self.addEventListener("install", e => {
