@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}*,*::before,*::after{box-sizing:border-box}</style>
+</head>
+<body>
+<title>Hoekvast</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#14161a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: één-scherm camera-tool — sticky kop met modus, tabbladen eronder, camerapaneel schuift volledig over het scherm */
+:root{
+  --bg:#14161a; --panel:#1c1f25; --line:#2c3038; --fg:#eceae4; --mute:#9a9ea8;
+  --tape:#f2c14e; --tape-ink:#1a1608; --ok:#5fc48a; --warn:#e8845a;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--f-body);-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--tape);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.head{display:flex;align-items:center;gap:12px;padding-block:12px 10px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto}
+.brand b{font:700 28px/1 var(--f-display);letter-spacing:.02em;text-transform:uppercase}
+.brand span{font:500 12px var(--f-mono);color:var(--mute)}
+.mode{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px}
+.mode button{border:0;background:none;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600;color:var(--mute)}
+.mode button[aria-pressed="true"]{background:var(--tape);color:var(--tape-ink)}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs button{border:0;background:none;padding:10px 12px 9px;font:600 16px var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--fg);border-color:var(--tape)}
+
+main{padding-block:18px 120px}
+.car{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+.car label{font:500 12px var(--f-mono);color:var(--mute);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.car input{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 12px;color:var(--fg);font:500 15px var(--f-mono)}
+.progress{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.bar{flex:1;height:8px;background:var(--panel);border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:repeating-linear-gradient(-45deg,var(--tape) 0 8px,#d9a93a 8px 16px);transition:width .3s}
+.progress span{font:600 14px var(--f-mono);font-variant-numeric:tabular-nums}
+
+.lede{color:var(--mute);margin:0 0 18px;max-width:62ch}
+h2{font:700 22px/1.1 var(--f-display);text-transform:uppercase;letter-spacing:.04em;margin:26px 0 10px;text-wrap:balance}
+h2 small{font:500 12px var(--f-mono);color:var(--mute);letter-spacing:.06em;margin-left:8px}
+
+.shot{border-top:1px solid var(--line)}
+.shot:last-child{border-bottom:1px solid var(--line)}
+.shot summary{list-style:none;display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 2px;cursor:pointer}
+.shot summary::-webkit-details-marker{display:none}
+.num{font:600 13px var(--f-mono);color:var(--mute);font-variant-numeric:tabular-nums}
+.shot.done .num{color:var(--ok)}
+.sname{font-weight:600;min-width:0}
+.sname em{display:block;font-style:normal;font-weight:400;font-size:13px;color:var(--mute)}
+.chips{display:flex;gap:6px}
+.chip{font:600 11px var(--f-mono);padding:3px 7px;border-radius:4px;border:1px solid var(--line);color:var(--mute);white-space:nowrap}
+.chip.lens{border-color:var(--tape);color:var(--tape)}
+.chip.ok{border-color:var(--ok);color:var(--ok)}
+.body{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:4px 2px 18px}
+@media (max-width:520px){.body{grid-template-columns:1fr}.chips .chip.h{display:none}}
+.plan{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;max-width:180px}
+.plan svg{display:block;width:100%;height:auto}
+.spec{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0 0 10px;font-size:14px}
+.spec dt{font:500 11px var(--f-mono);color:var(--mute);text-transform:uppercase;letter-spacing:.06em;padding-top:3px}
+.spec dd{margin:0;min-width:0}
+.why{font-size:14px;color:var(--mute);margin:0 0 10px}
+.ai{font-size:13px;border-left:3px solid var(--tape);padding:4px 10px;margin:0 0 12px;background:rgba(242,193,78,.06)}
+.go{display:inline-flex;align-items:center;gap:8px;border:0;background:var(--tape);color:var(--tape-ink);font:700 16px var(--f-display);letter-spacing:.06em;text-transform:uppercase;padding:10px 16px;border-radius:8px}
+.thumb{width:72px;height:54px;object-fit:cover;border-radius:6px;border:1px solid var(--ok);vertical-align:middle;margin-left:8px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+.card h3{font:700 18px var(--f-display);text-transform:uppercase;letter-spacing:.05em;margin:0 0 8px}
+.card p{margin:0 0 8px}
+.card ul{margin:0;padding-left:18px}
+.card li{margin:4px 0}
+.kv{display:grid;grid-template-columns:minmax(110px,auto) 1fr;gap:6px 14px;font-size:14px}
+.kv b{font:600 13px var(--f-mono);color:var(--tape)}
+.note{font-size:13px;color:var(--mute)}
+.prompt{position:relative;background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:12px 12px 40px;font:13px/1.5 var(--f-mono);margin:8px 0}
+.prompt button{position:absolute;right:8px;bottom:8px;border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:4px 10px;font-size:12px}
+.warnbox{border-color:var(--warn)}
+.warnbox h3{color:var(--warn)}
+.lenses{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:8px}
+.lensc{border:1px solid var(--line);border-radius:10px;padding:10px}
+.lensc b{font:700 26px var(--f-display);display:block}
+.lensc span{font-size:13px;color:var(--mute)}
+.lensc.good{border-color:var(--ok)} .lensc.bad{border-color:var(--warn)}
+
+/* Camera */
+#cam{position:fixed;inset:0;z-index:20;background:#000;display:flex;flex-direction:column}
+.vf{position:relative;flex:1;overflow:hidden;background:#000}
+.vf video,.vf img.still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.vf svg.ov{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cbar{position:absolute;left:0;right:0;top:0;padding:calc(env(safe-area-inset-top,0px) + 10px) max(14px,env(safe-area-inset-right,0px)) 14px max(14px,env(safe-area-inset-left,0px));background:linear-gradient(#000c,#0000);display:flex;gap:12px;align-items:flex-start}
+.cbar .t{flex:1;min-width:0}
+.cbar .t b{font:700 22px/1.1 var(--f-display);text-transform:uppercase;letter-spacing:.04em;display:block;color:#fff}
+.cbar .t span{font-size:13px;color:#ddd}
+.cbar .x{border:1px solid #fff5;background:#0008;color:#fff;border-radius:999px;width:40px;height:40px;flex:none;font-size:20px}
+.hud{position:absolute;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 92px);display:flex;flex-wrap:wrap;gap:6px}
+.hud .chip.warn{color:var(--warn);border-color:var(--warn)}
+.zoom{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:6px;background:#000a;padding:5px;border-radius:999px}
+.zoom button{border:0;background:none;color:#fff;width:42px;height:42px;border-radius:50%;font:600 13px var(--f-mono)}
+.zoom button[aria-pressed="true"]{background:var(--tape);color:var(--tape-ink)}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
+.flash.on{opacity:.6;transition:none}
+.hud .chip{background:#000a;color:#fff;border-color:#fff4}
+.hud .chip.lens{color:var(--tape);border-color:var(--tape)}
+.level{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:74px;font:600 12px var(--f-mono);background:#000a;color:#fff;padding:4px 8px;border-radius:4px}
+.level.ok{color:var(--ok)}
+.controls{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:14px max(16px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:#0b0c0e}
+.controls .side{display:flex;gap:8px;align-items:center}
+.controls .side.r{justify-content:flex-end}
+.nav{display:inline-flex;align-items:center;border:1px solid #fff3;background:none;color:#fff;border-radius:8px;padding:8px 12px;font:600 14px var(--f-display);letter-spacing:.06em;text-transform:uppercase}
+.shutter{width:74px;height:74px;border-radius:50%;border:4px solid #fff;background:var(--tape);position:relative}
+.shutter:active{transform:scale(.95)}
+.shutter input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.nav.ic{font-size:22px;padding:6px 14px}
+.nav.app{position:relative;cursor:pointer;white-space:nowrap}
+.mini{width:46px;height:46px;border-radius:8px;object-fit:cover;border:2px solid var(--ok)}
+.fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:90px 24px 40px;color:#ccc;font-size:14px}
+.fallback svg{width:min(100%,520px);height:auto;border:1px dashed #fff3;border-radius:10px}
+.toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ok);color:#06140c;font-weight:600;padding:8px 14px;border-radius:999px;z-index:30;font-size:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="head">
+      <div class="brand"><b>Hoekvast</b><span>pixel 10 pro</span></div>
+      <div class="mode" role="group" aria-label="Modus">
+        <button id="m-mb" aria-pressed="true">MB Autoadvies</button>
+        <button id="m-own" aria-pressed="false">Eigen shoot</button>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="list" aria-selected="true">Shotlist</button>
+      <button role="tab" data-tab="pixel" aria-selected="false">Pixel-instellingen</button>
+      <button role="tab" data-tab="light" aria-selected="false">Licht &amp; plek</button>
+      <button role="tab" data-tab="ai" aria-selected="false">AI-bewerking</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<section id="cam" hidden aria-label="Camera">
+  <div class="vf" id="vf">
+    <video id="video" playsinline muted autoplay></video>
+    <img class="still" id="still" alt="" hidden>
+    <svg class="ov" id="ov" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"></svg>
+    <div class="fallback" id="fb" hidden></div>
+    <div class="cbar">
+      <div class="t"><b id="c-name"></b><span id="c-how"></span></div>
+      <button class="x" id="c-close" aria-label="Sluit camera">×</button>
+    </div>
+    <div class="hud" id="hud"></div>
+    <div class="level" id="level" hidden></div>
+    <div class="zoom" id="zoom" hidden></div>
+    <div class="flash" id="flash"></div>
+  </div>
+  <div class="controls">
+    <div class="side"><button class="nav ic" id="c-prev" aria-label="Vorige foto">‹</button><label class="nav app" id="c-app" title="Beste kwaliteit: maak de foto met Pixel Camera">Pixel-app<input type="file" id="file2" accept="image/*" capture="environment" hidden></label></div>
+    <label class="shutter" id="shutter" role="button" tabindex="0" aria-label="Foto maken"><input type="file" id="file" accept="image/*" capture="environment" hidden></label>
+    <div class="side r"><img class="mini" id="mini" alt="" hidden><button class="nav ic" id="c-next" aria-label="Volgende foto">›</button></div>
+  </div>
+</section>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ---------- Data ---------- */
+// angle: 0 = recht van voren, 90 = rechterzijde (bijrijder), 180 = achter, 270 = linkerzijde (bestuurder, NL)
+// d: afstand in meters, -1 = binnen/close-up
+const SHOTS = {
+mb: [
+ {g:"Exterieur — advertentieset", items:[
+  {id:"f34l",n:"Voor ¾ links (hoofdfoto)",a:315,d:6,h:"Koplamphoogte · ±70 cm",lens:"2x",ov:"34f",how:"Ga op de hoek linksvoor staan, telefoon horizontaal. Neus van de auto naar de linkerkant van het beeld.",why:"De eerste foto die een koper ziet. Toont neus, flank en houding in één beeld.",tip:"Stuur iets naar links zodat de velg naar je toe draait. Laat 10% ruimte rond de auto.",ai:"Hele auto in beeld met marge rondom, dan kan AI de achtergrond strak vervangen zonder wielen af te snijden."},
+  {id:"front",n:"Recht van voren",a:0,d:6,h:"Koplamphoogte · ±70 cm",lens:"2x",ov:"front",how:"Precies op de middellijn, logo in het midden van het raster.",why:"Grille, koplampen, voorbumper en kenteken in één beeld. Scheve bumpers vallen hier op.",tip:"Gebruik de middenlijn van het raster om symmetrisch te staan."},
+  {id:"sidel",n:"Zijkant links",a:270,d:7,h:"Halve deurhoogte · ±80 cm",lens:"2x",ov:"side",how:"Haaks op het midden van de auto, beide wielen even groot in beeld.",why:"Laat lengte, wielbasis en paneelnaden zien. Deuken en kleurverschil vallen op in strijklicht.",tip:"Wielen recht. Staat het wiel scheef in beeld, dan sta je niet haaks."},
+  {id:"r34l",n:"Achter ¾ links",a:225,d:6,h:"Achterlichthoogte · ±80 cm",lens:"2x",ov:"34r",how:"Hoek linksachter, achterkant links in beeld.",why:"Achterkant en flank samen; tweede meest bekeken foto.",tip:"Let op je eigen spiegelbeeld in de achterruit, stap iets opzij."},
+  {id:"rear",n:"Recht van achteren",a:180,d:6,h:"Achterlichthoogte · ±80 cm",lens:"2x",ov:"rear",how:"Middellijn, embleem in het midden.",why:"Achterklep, uitlaat, bumper en trekhaak.",tip:"Kofferklep dicht, kenteken leesbaar."},
+  {id:"r34r",n:"Achter ¾ rechts",a:135,d:6,h:"Achterlichthoogte · ±80 cm",lens:"2x",ov:"34r",how:"Hoek rechtsachter.",why:"Rechterflank achter: veel parkeerschade zit hier.",tip:"Zelfde afstand en hoogte als links, dan oogt de set consistent."},
+  {id:"sider",n:"Zijkant rechts",a:90,d:7,h:"Halve deurhoogte · ±80 cm",lens:"2x",ov:"side",how:"Haaks op het midden van de rechterflank.",why:"Bijrijderskant, vaak minder netjes dan de kant die de verkoper laat zien.",tip:"Zelfde afstand als links."},
+  {id:"f34r",n:"Voor ¾ rechts",a:45,d:6,h:"Koplamphoogte · ±70 cm",lens:"2x",ov:"34f",how:"Hoek rechtsvoor.",why:"Maakt het rondje om de auto compleet.",tip:"Stuur naar rechts voor de velg."}
+ ]},
+ {g:"Keuring — identiteit & tellerstand", items:[
+  {id:"vin",n:"VIN (chassisnummer)",a:330,d:-1,h:"Ooghoogte",lens:"1x",ov:"detail",how:"Voorruit linksonder of B-stijl. Recht erop, geen flits door de ruit.",why:"Moet overeenkomen met kenteken en papieren.",tip:"Houd je hand als schaduwkap boven de ruit tegen reflectie."},
+  {id:"odo",n:"Kilometerstand + waarschuwingslampjes",a:300,d:-1,h:"Vanaf bestuurdersstoel",lens:"1x",ov:"detail",how:"Contact aan, motor aan, scherm volledig leesbaar.",why:"Bewijst stand en laat zien of er storingen branden.",tip:"Tik op de cijfers om scherp te stellen, verlaag belichting iets als het scherm uitvliegt."},
+  {id:"plate",n:"Typeplaat / sticker deurstijl",a:300,d:-1,h:"Ooghoogte",lens:"1x",ov:"detail",how:"Deur open, B-stijl.",why:"Bouwdatum, bandenmaat, lakcode.",tip:"Macro schakelt automatisch in als je dichtbij komt."},
+  {id:"keys",n:"Sleutels + onderhoudsboekje",a:-1,d:-1,h:"Van boven",lens:"1x",ov:"detail",how:"Op een neutrale ondergrond, alles naast elkaar.",why:"Aantal sleutels en historie is onderdeel van de waarde.",tip:"Schaduwvrij: niet direct onder een lamp."},
+  {id:"obd",n:"OBD-uitlezing",a:-1,d:-1,h:"Recht op scherm",lens:"1x",ov:"detail",how:"Scherm van de tester of app, foutcodes leesbaar.",why:"Vastleggen wat er bij keuring uitgelezen is.",tip:"Liever een screenshot van de app dan een foto van het scherm."}
+ ]},
+ {g:"Keuring — techniek & schade", items:[
+  {id:"tyres",n:"Banden: profiel per wiel (4×)",a:315,d:-1,h:"Laag, op de knie",lens:"1x",ov:"wheel",how:"Profieldieptemeter in de groef, cijfer leesbaar. Daarna DOT-code.",why:"Profiel, ongelijke slijtage en bouwjaar band.",tip:"Stuur vol in zodat het loopvlak zichtbaar is."},
+  {id:"brakes",n:"Remschijven door de velg",a:315,d:-1,h:"Ashoogte",lens:"1x",ov:"wheel",how:"Door de spaken, rand van de schijf in beeld.",why:"Groeven en rand tonen slijtage.",tip:"Zet scherpte handmatig (Pro-instellingen), autofocus pakt vaak de velg."},
+  {id:"rims",n:"Velgschade (stoeprand)",a:315,d:-1,h:"Ashoogte",lens:"1x",ov:"wheel",how:"Elke beschadiging: één overzicht + één close-up.",why:"Vaak onderhandelpunt.",tip:"Strijklicht van opzij laat krassen beter zien."},
+  {id:"dmg",n:"Schade: overzicht + close-up",a:-1,d:-1,h:"Haaks op paneel",lens:"1x",ov:"detail",how:"Eerst 1,5 m afstand (waar zit het), dan 30 cm (hoe erg).",why:"Een close-up zonder overzicht zegt niets over de locatie.",tip:"Leg een munt of meetlint ernaast voor de schaal."},
+  {id:"engine",n:"Motorruimte",a:0,d:-1,h:"Boven de motor, iets voorovergebogen",lens:"1x",ov:"detail",how:"Motorkap open, hele motorruimte in beeld.",why:"Lekkages, olienevel, geknutsel.",tip:"Gebruik 0.5x alleen als 1x niet past."},
+  {id:"oil",n:"Olievuldop + peilstok",a:0,d:-1,h:"Close-up",lens:"1x",ov:"detail",how:"Binnenkant vuldop en peilstok op een doekje.",why:"Mayonaise of zwarte smurrie zegt veel.",tip:"Wit papieren doekje als achtergrond."},
+  {id:"under",n:"Onderkant / uitlaat",a:180,d:-1,h:"Op de grond",lens:"0.5x",ov:"detail",how:"Telefoon plat onder de achterbumper, zaklamp aan.",why:"Roest, lekkage, schade aan bodem.",tip:"Hier mag de 0.5x lens: vervorming maakt niet uit."},
+  {id:"paint",n:"Lakdiktemeting per paneel",a:-1,d:-1,h:"Haaks op paneel",lens:"1x",ov:"detail",how:"Meter op het paneel, display leesbaar en paneel herkenbaar.",why:"Bewijs van overgespoten delen.",tip:"Benoem in de bestandsnaam welk paneel het is."}
+ ]},
+ {g:"Interieur", items:[
+  {id:"dash",n:"Dashboard vanaf achterbank",a:-1,d:-1,h:"Tussen de voorstoelen, hoofdsteunhoogte",lens:"0.5x",ov:"interior",how:"Midden achter, beide voorstoelen en het hele dashboard.",why:"Geeft het gevoel van instappen.",tip:"Binnenverlichting uit; het licht komt van buiten."},
+  {id:"seat",n:"Bestuurdersstoel (zijwang)",a:270,d:-1,h:"Deur open, heuphoogte",lens:"1x",ov:"interior",how:"Vanuit de open deur, zijwang van de zitting goed zichtbaar.",why:"Slijtage zijwang verraadt het echte gebruik.",tip:"Dit klopt met de km-stand of niet."},
+  {id:"wheel",n:"Stuur + pook",a:-1,d:-1,h:"Ooghoogte vanaf bijrijder",lens:"1x",ov:"interior",how:"Stuurwiel volledig in beeld.",why:"Glimmend leer = veel kilometers.",tip:""},
+  {id:"rearseat",n:"Achterbank",a:-1,d:-1,h:"Deur open, heuphoogte",lens:"0.5x",ov:"interior",how:"Vanuit de achterdeur, hele bank.",why:"Vlekken, kinderzitjesporen.",tip:""},
+  {id:"roof",n:"Hemel / panoramadak",a:-1,d:-1,h:"Liggend op de stoel",lens:"0.5x",ov:"interior",how:"Telefoon naar boven gericht.",why:"Vochtplekken, rookschade.",tip:""},
+  {id:"boot",n:"Kofferbak + vloer open",a:180,d:-1,h:"Staand achter de auto",lens:"1x",ov:"interior",how:"Eerst bagageruimte, dan vloer open (reservewiel/vocht).",why:"Vocht in de reservewielbak is een klassieker.",tip:""}
+ ]}
+],
+own: [
+ {g:"Hero-shots (Instagram 4:5)", items:[
+  {id:"hero",n:"Lage voor ¾",a:315,d:10,h:"Kniehoogte · ±40 cm",lens:"5x",ov:"34f",how:"Ver weg staan en inzoomen op 5x, laag door de knieën.",why:"De 5x lens comprimeert: de auto oogt breed en laag, niet vervormd.",tip:"Wiel naar je toe gedraaid, camera iets onder koplamphoogte.",ai:"Vaste afstand voor de hele set, dan kun je achteraf per foto dezelfde look toepassen."},
+  {id:"front5",n:"Recht van voren, laag",a:0,d:12,h:"Bumperhoogte · ±30 cm",lens:"5x",ov:"front",how:"Middellijn, grille in het midden. Telefoon bijna op de grond.",why:"Agressieve neus, symmetrie.",tip:"Ondersteboven houden zet de lens dichter bij de grond."},
+  {id:"prof",n:"Profiel met gedraaid wiel",a:270,d:10,h:"Ashoogte · ±35 cm",lens:"2x",ov:"side",how:"Haaks op de flank.",why:"Laat stance en velgen zien.",tip:"Draai het stuur zodat de velg, niet de band, naar je toe wijst."},
+  {id:"rear34",n:"Lage achter ¾",a:225,d:10,h:"Kniehoogte",lens:"5x",ov:"34r",how:"Hoek linksachter, laag.",why:"Uitlaat en achterlichten in één beeld.",tip:"Achterlichten aan geeft gloed bij schemer."}
+ ]},
+ {g:"Details", items:[
+  {id:"badge",n:"Embleem / badge",a:180,d:-1,h:"Op badgehoogte",lens:"2x",ov:"detail",how:"2x op 30–40 cm, embleem scherp, rest onscherp.",why:"Signatuurfoto van het model.",tip:"Portretmodus geeft zachte achtergrond."},
+  {id:"caliper",n:"Velg + remklauw",a:315,d:-1,h:"Ashoogte",lens:"2x",ov:"wheel",how:"Wiel gedraaid, door de spaken op de klauw scherpstellen.",why:"Performance-detail.",tip:"Velgnaaf recht: logo rechtop door de auto iets te verplaatsen."},
+  {id:"light",n:"Koplamp met dagrijverlichting",a:330,d:-1,h:"Koplamphoogte",lens:"2x",ov:"detail",how:"Schuin van voren, lampen aan.",why:"Lichtsignatuur doet het goed in schemer.",tip:"Belichting −0,7 zodat de LED's niet uitbranden."},
+  {id:"exh",n:"Uitlaateinden",a:180,d:-1,h:"Op de grond",lens:"2x",ov:"detail",how:"Laag van achteren, uitlaten groot in beeld.",why:"",tip:"Poets ze eerst; roet ziet er van dichtbij slecht uit."},
+  {id:"int",n:"Interieur: stuur + stoelen",a:-1,d:-1,h:"Vanuit open bijrijdersdeur",lens:"1x",ov:"interior",how:"Diagonaal naar de bestuurdersplek.",why:"",tip:"Bij zon: in de schaduw parkeren voor gelijkmatig licht."}
+ ]},
+ {g:"Actie & nacht", items:[
+  {id:"roll",n:"Rolling shot",a:270,d:4,h:"Uit raam meerijdende auto",lens:"1x",ov:"side",how:"Beide auto's 30–50 km/u, sluitertijd 1/30–1/60 s, meebewegen met de auto.",why:"Bewegingsonscherpe achtergrond, scherpe auto: dé autofoto.",tip:"Alleen op een rustige weg met een aparte bestuurder. Maak een burst en houd de scherpste."},
+  {id:"night",n:"Nacht met lichtsporen",a:315,d:10,h:"Op statief, kniehoogte",lens:"1x",ov:"34f",how:"Statief of vaste ondergrond, lange sluitertijd, ISO zo laag mogelijk.",why:"Sfeerfoto voor de feed.",tip:"Of Night Sight met Lange belichting voor strepen van passerende auto's."}
+ ]}
+]};
+
+/* ---------- State ---------- */
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let mode=store.get("hv-mode","mb");
+let tab="list";
+let carName=store.get("hv-car","");
+const photos={}; // id -> {url, blob}
+let doneIds=new Set(store.get("hv-done",[]));
+let camIdx=0, stream=null, levelOn=false, track=null, imgCap=null, zoomCaps=null, curZoom=1;
+
+const $=s=>document.querySelector(s);
+const flat=()=>SHOTS[mode].flatMap(g=>g.items);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- Top-down positie ---------- */
+function planSVG(s){
+  const cx=90,cy=100;
+  let cam="";
+  if(s.a>=0 && s.d>0){
+    const r=78, rad=(s.a-90)*Math.PI/180; // 0° = boven (voorkant)
+    const x=cx+r*Math.cos(rad), y=cy+r*Math.sin(rad);
+    const ang=Math.atan2(cy-y,cx-x), sp=.32, L=40;
+    const p1=[x+L*Math.cos(ang-sp),y+L*Math.sin(ang-sp)], p2=[x+L*Math.cos(ang+sp),y+L*Math.sin(ang+sp)];
+    cam=`<path d="M${x},${y} L${p1} L${p2} Z" fill="rgba(242,193,78,.25)"/><circle cx="${x}" cy="${y}" r="8" fill="#f2c14e"/><text x="${x}" y="${y+3.5}" text-anchor="middle" font-size="9" font-family="JetBrains Mono,monospace" font-weight="700" fill="#1a1608">${esc(s.lens)}</text>`;
+  } else if(s.a>=0){
+    const r=40, rad=(s.a-90)*Math.PI/180, x=cx+r*Math.cos(rad), y=cy+r*Math.sin(rad);
+    cam=`<circle cx="${x}" cy="${y}" r="13" fill="none" stroke="#f2c14e" stroke-width="2" stroke-dasharray="3 3"/><circle cx="${x}" cy="${y}" r="4" fill="#f2c14e"/>`;
+  }
+  return `<svg viewBox="0 0 180 200" role="img" aria-label="Positie rond de auto">
+   <circle cx="${cx}" cy="${cy}" r="78" fill="none" stroke="#2c3038" stroke-dasharray="2 5"/>
+   <rect x="68" y="58" width="44" height="84" rx="14" fill="#2a2e36" stroke="#9a9ea8" stroke-width="1.5"/>
+   <rect x="73" y="74" width="34" height="16" rx="4" fill="#14161a"/><rect x="73" y="114" width="34" height="12" rx="4" fill="#14161a"/>
+   <text x="${cx}" y="52" text-anchor="middle" font-size="9" fill="#9a9ea8" font-family="JetBrains Mono,monospace">VOOR</text>
+   <text x="${cx}" y="155" text-anchor="middle" font-size="9" fill="#9a9ea8" font-family="JetBrains Mono,monospace">ACHTER</text>
+   <text x="30" y="${cy+3}" text-anchor="middle" font-size="9" fill="#9a9ea8" font-family="JetBrains Mono,monospace">L</text>
+   <text x="150" y="${cy+3}" text-anchor="middle" font-size="9" fill="#9a9ea8" font-family="JetBrains Mono,monospace">R</text>
+   ${cam}
+   <text x="${cx}" y="194" text-anchor="middle" font-size="10" fill="#eceae4" font-family="JetBrains Mono,monospace">${s.d>0?`± ${s.d} m`:(s.a>=0?"close-up":"binnen / los")}</text>
+  </svg>`;
+}
+
+/* ---------- Overlays (generieke kaders, geen echt model) ---------- */
+const OV={
+ side:`<path d="M170 640 L170 545 Q180 500 290 482 L520 455 Q610 345 780 322 L1060 318 Q1170 324 1260 440 L1400 462 Q1440 470 1440 540 L1440 640 Z"/><circle cx="430" cy="640" r="95"/><circle cx="1220" cy="640" r="95"/>`,
+ front:`<path d="M470 690 L470 520 Q480 470 540 455 L620 330 Q650 300 700 296 L900 296 Q950 300 980 330 L1060 455 Q1120 470 1130 520 L1130 690 Z"/><rect x="500" y="680" width="90" height="70" rx="12"/><rect x="1010" y="680" width="90" height="70" rx="12"/><line x1="800" y1="250" x2="800" y2="780" stroke-dasharray="10 10"/>`,
+ rear:`<path d="M480 690 L480 520 Q490 470 545 458 L630 340 Q660 305 710 302 L890 302 Q940 305 970 340 L1055 458 Q1110 470 1120 520 L1120 690 Z"/><rect x="505" y="680" width="90" height="70" rx="12"/><rect x="1005" y="680" width="90" height="70" rx="12"/><line x1="800" y1="250" x2="800" y2="780" stroke-dasharray="10 10"/>`,
+ "34f":`<path d="M260 650 L250 520 Q270 470 380 450 L520 430 L620 330 Q660 300 760 300 L1080 310 Q1180 320 1250 430 L1360 450 Q1400 462 1400 520 L1400 640 Z"/><path d="M260 650 L250 520 L520 430" opacity=".6"/><ellipse cx="420" cy="660" rx="70" ry="90"/><ellipse cx="1210" cy="650" rx="85" ry="92"/>`,
+ "34r":`<path d="M1340 650 L1350 520 Q1330 470 1220 450 L1080 430 L980 330 Q940 300 840 300 L520 310 Q420 320 350 430 L240 450 Q200 462 200 520 L200 640 Z"/><ellipse cx="1180" cy="660" rx="70" ry="90"/><ellipse cx="390" cy="650" rx="85" ry="92"/>`,
+ wheel:`<circle cx="800" cy="450" r="300"/><circle cx="800" cy="450" r="120" stroke-dasharray="12 12"/>`,
+ detail:`<rect x="450" y="200" width="700" height="500" rx="24" stroke-dasharray="20 14"/><path d="M780 450 h40 M800 430 v40"/>`,
+ interior:`<path d="M300 700 L560 420 L1040 420 L1300 700" stroke-dasharray="16 12"/><line x1="800" y1="200" x2="800" y2="760" stroke-dasharray="10 10"/>`
+};
+function overlay(key){
+  const thirds=`<g stroke="rgba(255,255,255,.22)" stroke-width="2"><line x1="533" y1="0" x2="533" y2="900"/><line x1="1067" y1="0" x2="1067" y2="900"/><line x1="0" y1="300" x2="1600" y2="300"/><line x1="0" y1="600" x2="1600" y2="600"/></g>`;
+  const margin=["side","front","rear","34f","34r"].includes(key)?`<rect x="120" y="150" width="1360" height="650" fill="none" stroke="rgba(242,193,78,.5)" stroke-width="3" stroke-dasharray="4 14"/><text x="130" y="140" fill="#f2c14e" font-size="30" font-family="JetBrains Mono,monospace">houd de auto binnen dit kader</text>`:"";
+  return thirds+margin+`<g fill="none" stroke="#f2c14e" stroke-width="5" stroke-linejoin="round" opacity=".9">${OV[key]||""}</g>`;
+}
+
+/* ---------- Render ---------- */
+function render(){
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
+  $("#m-mb").setAttribute("aria-pressed",mode==="mb"); $("#m-own").setAttribute("aria-pressed",mode==="own");
+  const m=$("#main");
+  if(tab==="list") m.innerHTML=listView();
+  if(tab==="pixel") m.innerHTML=pixelView();
+  if(tab==="light") m.innerHTML=lightView();
+  if(tab==="ai") m.innerHTML=aiView();
+  bindMain();
+}
+function listView(){
+  const all=flat(), done=all.filter(s=>doneIds.has(s.id)).length;
+  let n=0;
+  const intro=mode==="mb"
+   ?"Vaste volgorde voor elke keuring: eerst het rondje om de auto voor de advertentieset, dan identiteit, techniek en interieur. Zo mis je niets en is elk rapport hetzelfde opgebouwd."
+   :"Set voor je eigen auto en Instagram. Exterieur liefst op 5x van ver weg en laag: dat geeft de stoere, gecomprimeerde look.";
+  return `<div class="car"><label for="carname">Auto</label><input id="carname" placeholder="bijv. ${mode==="mb"?"Alpina B5 · kenteken":"Octavia VRS"}" value="${esc(carName)}"></div>
+  <div class="progress"><div class="bar"><i style="width:${all.length?done/all.length*100:0}%"></i></div><span>${done}/${all.length}</span></div>
+  <p class="lede">${intro}</p>
+  ${SHOTS[mode].map(g=>`<h2>${esc(g.g)} <small>${g.items.length} foto's</small></h2>
+   ${g.items.map(s=>{n++;const i=all.indexOf(s);const d=doneIds.has(s.id);return `<details class="shot${d?" done":""}">
+    <summary><span class="num">${d?"✓":String(n).padStart(2,"0")}</span><span class="sname">${esc(s.n)}<em>${esc(s.h)}</em></span>
+     <span class="chips"><span class="chip lens">${esc(s.lens)}</span>${s.d>0?`<span class="chip h">${s.d} m</span>`:""}</span></summary>
+    <div class="body"><div class="plan">${planSVG(s)}</div>
+     <div style="min-width:0">
+      <dl class="spec"><dt>Zo</dt><dd>${esc(s.how)}</dd><dt>Hoogte</dt><dd>${esc(s.h)}</dd><dt>Lens</dt><dd>${esc(s.lens)}${s.lens==="0.5x"?" (alleen hier, binnen of onder de auto)":""}</dd>${s.tip?`<dt>Tip</dt><dd>${esc(s.tip)}</dd>`:""}</dl>
+      ${s.why?`<p class="why">${esc(s.why)}</p>`:""}
+      ${s.ai?`<p class="ai"><b>AI-klaar:</b> ${esc(s.ai)}</p>`:""}
+      <button class="go" data-shoot="${i}">Fotograferen</button>${photos[s.id]?`<img class="thumb" src="${photos[s.id].url}" alt="Gemaakte foto ${esc(s.n)}">`:""}
+     </div></div></details>`}).join("")}`).join("")}
+  <div class="card" style="margin-top:24px"><h3>Klaar met de set?</h3><p class="note">Foto's blijven in deze sessie staan. Exporteer ze naar je telefoon met de juiste bestandsnamen.</p>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="go" id="export">Foto's opslaan</button><button class="nav" id="reset" style="border:1px solid var(--line);background:none;color:var(--fg);border-radius:8px;padding:8px 12px">Nieuwe auto</button></div>
+   <p class="note" id="exportmsg"></p></div>`;
+}
+function pixelView(){return `
+ <p class="lede">Je Pixel 10 Pro heeft Pro-instellingen in de Pixel Camera-app. Dit zijn de instellingen die ik voor autofoto's aanraad, plus waar je ze vindt.</p>
+ <h2>Welke lens wanneer</h2>
+ <div class="lenses">
+  <div class="lensc bad"><b>0.5x</b><span>Ultragroothoek. Nooit voor exterieur: rekt bumpers en wielen uit. Wel voor interieur, motorruimte en onder de auto.</span></div>
+  <div class="lensc"><b>1x</b><span>Hoofdcamera, 50 MP, beste in weinig licht. Voor details, interieur en als er geen ruimte is.</span></div>
+  <div class="lensc good"><b>2x</b><span>Standaard voor de advertentieset. Natuurlijke verhoudingen, ±6 m afstand.</span></div>
+  <div class="lensc good"><b>5x</b><span>Telelens. Voor hero-shots: ver weg staan, auto oogt breed en laag. ±10–15 m.</span></div>
+ </div>
+ <h2>Instellen (eenmalig)</h2>
+ <div class="card"><div class="kv">
+  <b>Raster</b><span>Instellingen → Rasterlijnen 3×3. Nodig om haaks en recht te staan.</span>
+  <b>Waterpas</b><span>Instellingen → Meer → Kaderhints / waterpas aan. Horizon recht = professioneler.</span>
+  <b>Resolutie</b><span>Pro-tab → 50 MP voor hero-shots en schadedetails (inzoomen achteraf). 12 MP is genoeg voor de rest.</span>
+  <b>Formaat</b><span>Pro-tab → RAW + JPEG voor je eigen shoot (meer ruimte bij bewerken). JPEG alleen voor keuringen: sneller en kleiner.</span>
+  <b>Lenskeuze</b><span>Pro-tab → Lensselectie op handmatig, zodat de telefoon bij 2x niet stiekem naar een andere lens springt.</span>
+  <b>Beeldverhouding</b><span>4:3 voor Marktplaats/rapport. Voor Instagram ook 4:3 schieten en achteraf naar 4:5 bijsnijden.</span>
+ </div></div>
+ <h2>Per foto (Pro-bediening)</h2>
+ <div class="card"><div class="kv">
+  <b>ISO</b><span>Zo laag als het kan (50–100 overdag). Hoge ISO geeft ruis op de lak.</span>
+  <b>Belichting</b><span>Donkere lak: +0,3. Witte/zilveren lak: −0,3 tot −0,7 zodat de lak niet uitbrandt.</span>
+  <b>Schaduwen</b><span>Iets omhoog bij interieur en velgen, zodat donkere delen detail houden.</span>
+  <b>Witbalans</b><span>Vast zetten (bijv. 5500 K bij bewolking) zodat alle foto's van één auto dezelfde kleur hebben.</span>
+  <b>Scherpte</b><span>Handmatig bij remschijven en door ruiten: focus-peaking laat zien wat scherp is.</span>
+  <b>Sluitertijd</b><span>Rolling shot 1/30–1/60 s. Statief bij nacht: lang. Overdag laat je hem automatisch.</span>
+ </div></div>
+ <div class="card"><h3>Camera Coach</h3><p>De Pixel 10 Pro heeft Camera Coach (Gemini) die tips geeft over kader en hoek. Handig als tweede check, maar de shotlist hier is leidend zodat elke set hetzelfde wordt.</p></div>`}
+function lightView(){return `
+ <p class="lede">Licht bepaalt 80% van het resultaat. Een goede plek scheelt meer dan elke bewerking.</p>
+ <div class="card"><h3>Beste licht</h3><ul>
+  <li><b>Bewolkt</b> is ideaal voor advertenties en keuringen: zacht licht, geen harde reflecties, schade goed zichtbaar.</li>
+  <li><b>Gouden uur</b> (uur na zonsopkomst / voor zonsondergang) voor je eigen shoot: warme kleuren, lange zachte schaduwen.</li>
+  <li><b>Middagzon vermijden</b>: harde reflecties op motorkap en dak, donkere schaduwen onder de auto.</li>
+  <li>Moet het in de zon: zet de zon <b>achter jou of opzij</b>, nooit in het beeld.</li>
+ </ul></div>
+ <div class="card"><h3>Plek kiezen</h3><ul>
+  <li>Rustige achtergrond: lege parkeerplaats, bedrijventerrein, egale muur.</li>
+  <li>Niets wat uit het dak lijkt te groeien (lantaarnpaal, boom).</li>
+  <li>Kijk naar de <b>reflectie in de lak</b>: een rij huizen of andere auto's spiegelt mee. Draai de auto tot de flank een egale lucht of muur weerspiegelt.</li>
+  <li>Minimaal 8 m vrije ruimte rondom voor 2x, 12–15 m voor 5x.</li>
+ </ul></div>
+ <div class="card"><h3>Auto klaarzetten</h3><ul>
+  <li>Gewassen en droog, ruiten schoon, banden zwart.</li>
+  <li>Kentekenplaat recht, spiegels uitgeklapt, ruiten dicht.</li>
+  <li>Interieur leeg: geen telefoonhouder, flesjes, parkeerschijf.</li>
+  <li>Stuur bij ¾-foto's iets ingedraaid zodat de velg naar de camera wijst.</li>
+ </ul></div>`}
+function aiView(){
+  const p1="Vervang alleen de achtergrond door een strakke lichtgrijze studio met een zachte reflectie op de vloer. Houd de auto exact zoals hij is: zelfde lak, velgen, kenteken, schade en verhoudingen. Pas geen vormen aan.";
+  const p2="Maak de belichting gelijkmatiger: haal harde reflecties van de lak iets weg, licht de schaduwen onder de auto iets op en maak de kleuren natuurlijk. Verander niets aan de auto zelf.";
+  const p3="Geef deze foto een filmische avondlook met warme highlights en koele schaduwen, licht verhoogd contrast, voor Instagram in 4:5.";
+  return `
+ <p class="lede">AI-bewerking werkt alleen goed als de foto er klaar voor is. Hoe consistenter je schiet, hoe beter de AI het resultaat krijgt.</p>
+ <div class="card"><h3>Zo schiet je voor AI</h3><ul>
+  <li>Hele auto in beeld met <b>10% marge</b>. Afgesneden wielen kan AI niet netjes aanvullen.</li>
+  <li>Niets dat de auto raakt of ervoor staat: mensen, borden, paaltjes.</li>
+  <li>Zelfde afstand, hoogte en lens voor de hele set. Dan krijgen alle foto's na vervanging dezelfde vloerlijn.</li>
+  <li>Bewolkt licht. Zachte reflecties zijn makkelijker te verbeteren dan harde zonvlekken.</li>
+  <li>RAW + JPEG bij je eigen shoot, zodat je eerst zelf belichting kunt corrigeren.</li>
+ </ul></div>
+ <div class="card warnbox"><h3>Keuringsfoto's: niet laten bewerken</h3><p>Voor MB Autoadvies moeten de technische en schadefoto's onbewerkt blijven. AI mag de achtergrond van de advertentieset aanpassen, maar nooit krassen, deuken, bandenslijtage of lampjes wegwerken. Vermeld in je rapport als een foto bewerkt is.</p></div>
+ <h2>Prompts om te kopiëren</h2>
+ <p class="note">Werkt in Google Foto's (Bewerken → Help me bewerken) en in Gemini.</p>
+ <div class="card"><h3>Studio-achtergrond</h3><div class="prompt"><span>${esc(p1)}</span><button data-copy="${esc(p1)}">Kopiëren</button></div></div>
+ <div class="card"><h3>Licht egaliseren</h3><div class="prompt"><span>${esc(p2)}</span><button data-copy="${esc(p2)}">Kopiëren</button></div></div>
+ <div class="card"><h3>Eigen shoot, sfeer</h3><div class="prompt"><span>${esc(p3)}</span><button data-copy="${esc(p3)}">Kopiëren</button></div></div>`}
+
+function bindMain(){
+  const ci=$("#carname"); if(ci) ci.oninput=e=>{carName=e.target.value;store.set("hv-car",carName)};
+  document.querySelectorAll("[data-shoot]").forEach(b=>b.onclick=()=>openCam(+b.dataset.shoot));
+  document.querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>{
+    const t=b.dataset.copy;
+    navigator.clipboard?.writeText(t).then(()=>{b.textContent="Gekopieerd"},()=>selectText(b.previousElementSibling));
+  });
+  const ex=$("#export"); if(ex) ex.onclick=exportAll;
+  const rs=$("#reset"); if(rs) rs.onclick=()=>{
+    if(rs.dataset.sure){doneIds=new Set();store.set("hv-done",[]);Object.keys(photos).forEach(k=>{URL.revokeObjectURL(photos[k].url);delete photos[k]});db.clear();carName="";store.set("hv-car","");render()}
+    else{rs.dataset.sure=1;rs.textContent="Zeker? Tik nogmaals"}
+  };
+}
+function selectText(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}
+
+/* ---------- Camera ---------- */
+async function openCam(i){
+  camIdx=i; $("#cam").hidden=false; document.body.style.overflow="hidden";
+  showShot();
+  if(!stream){
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:3840},height:{ideal:2160}},audio:false});
+      $("#video").srcObject=stream; $("#fb").hidden=true; $("#file").hidden=true; $("#video").hidden=false;
+      track=stream.getVideoTracks()[0];
+      try{const c=track.getCapabilities?track.getCapabilities():{}; zoomCaps=c.zoom||null}catch(e){zoomCaps=null}
+      try{imgCap=("ImageCapture" in window)?new ImageCapture(track):null}catch(e){imgCap=null}
+      showShot();
+    }catch(e){ useFallback(); }
+  }
+  startLevel();
+}
+function useFallback(){
+  $("#video").hidden=true; $("#file").hidden=false; $("#fb").hidden=false;
+}
+function showShot(){
+  const s=flat()[camIdx];
+  $("#c-name").textContent=`${camIdx+1}. ${s.n}`;
+  $("#c-how").textContent=s.how;
+  $("#ov").innerHTML=overlay(s.ov);
+  const want=parseFloat(s.lens), zs=zoomSteps();
+  const can=!stream||!zs.length||zs.includes(want);
+  $("#hud").innerHTML=`<span class="chip lens">${esc(s.lens)}</span><span class="chip">${esc(s.h)}</span>${s.d>0?`<span class="chip">± ${s.d} m</span>`:""}${!can?`<span class="chip warn">${esc(s.lens)} niet in browser: gebruik Pixel-app</span>`:""}`;
+  renderZoom(want);
+  $("#fb").innerHTML=`<svg viewBox="0 0 1600 900" style="background:#111">${overlay(s.ov)}</svg><p>Live zoeker is hier niet beschikbaar. Kijk naar het kader hierboven en tik op de gele knop of op Pixel-app om de foto te maken.<br>Op GitHub Pages krijg je de live zoeker met kader en zoomknoppen.</p>`;
+  const p=photos[s.id]; const mini=$("#mini"); mini.hidden=!p; if(p) mini.src=p.url;
+  $("#c-prev").disabled=camIdx===0; $("#c-next").textContent=camIdx===flat().length-1?"✓":"›";
+}
+function closeCam(){
+  $("#cam").hidden=true; document.body.style.overflow="";
+  if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;track=null;imgCap=null;zoomCaps=null}
+  render();
+}
+function savePhoto(blob){
+  const s=flat()[camIdx];
+  if(photos[s.id]) URL.revokeObjectURL(photos[s.id].url);
+  photos[s.id]={blob,url:URL.createObjectURL(blob)};
+  doneIds.add(s.id); store.set("hv-done",[...doneIds]);
+  db.put(s.id,blob);
+  toast("Opgeslagen ✓"); showShot();
+  if(navigator.vibrate) try{navigator.vibrate(30)}catch(e){}
+}
+function zoomSteps(){
+  if(!zoomCaps) return [];
+  return [0.5,1,2,5].filter(z=>z>=zoomCaps.min-0.01&&z<=zoomCaps.max+0.01);
+}
+function renderZoom(want){
+  const el=$("#zoom"), zs=zoomSteps();
+  if(!stream||!zs.length){el.hidden=true;return}
+  el.hidden=false;
+  const target=zs.includes(want)?want:zs.reduce((a,b)=>Math.abs(b-want)<Math.abs(a-want)?b:a);
+  setZoom(target);
+  el.innerHTML=zs.map(z=>`<button data-z="${z}" aria-pressed="${z===curZoom}">${z}x</button>`).join("");
+  el.querySelectorAll("button").forEach(b=>b.onclick=()=>{setZoom(+b.dataset.z);renderZoom(+b.dataset.z)});
+}
+function setZoom(z){
+  curZoom=z;
+  if(track) track.applyConstraints({advanced:[{zoom:z}]}).catch(()=>{});
+}
+function flash(){const f=$("#flash");f.classList.add("on");requestAnimationFrame(()=>requestAnimationFrame(()=>f.classList.remove("on")))}
+async function capture(){
+  const v=$("#video"); if(!stream||!v.videoWidth) return;
+  flash();
+  if(imgCap){
+    try{const b=await imgCap.takePhoto(); if(b&&b.size){savePhoto(b);return}}catch(e){}
+  }
+  const c=document.createElement("canvas"); c.width=v.videoWidth; c.height=v.videoHeight;
+  c.getContext("2d").drawImage(v,0,0);
+  c.toBlob(b=>b&&savePhoto(b),"image/jpeg",.92);
+}
+function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,1400)}
+
+/* Waterpas via kantelsensor (werkt na plaatsen op GitHub, niet in elke preview) */
+function onTilt(e){
+  const el=$("#level");
+  const landscape=Math.abs(window.orientation||screen.orientation?.angle||0)===90;
+  const deg=landscape?e.beta:e.gamma; if(deg==null) return;
+  el.hidden=false; const v=Math.round(deg*10)/10;
+  el.textContent=Math.abs(v)<1.5?"recht ✓":`scheef ${v>0?"+":""}${v.toFixed(1)}°`;
+  el.classList.toggle("ok",Math.abs(v)<1.5);
+}
+function startLevel(){ if(levelOn) return; try{window.addEventListener("deviceorientation",onTilt);levelOn=true}catch(e){} }
+
+/* ---------- Export ---------- */
+function slug(s){return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+async function exportAll(){
+  const msg=$("#exportmsg"); const all=flat();
+  const files=all.map((s,i)=>photos[s.id]?new File([photos[s.id].blob],`${slug(carName||"auto")}_${String(i+1).padStart(2,"0")}_${slug(s.n)}.jpg`,{type:"image/jpeg"}):null).filter(Boolean);
+  if(!files.length){msg.textContent="Nog geen foto's in deze sessie.";return}
+  try{
+    if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files,title:carName||"Autofoto's"});msg.textContent=`${files.length} foto's gedeeld.`;return}
+  }catch(e){ if(e.name==="AbortError") return; }
+  try{
+    files.forEach((f,i)=>setTimeout(()=>{const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove()},i*350));
+    msg.textContent=`${files.length} foto's worden gedownload. Werkt dit niet in deze preview, dan wel na plaatsen op GitHub.`;
+  }catch(e){msg.textContent="Opslaan lukt niet in deze preview; na plaatsen op GitHub wel."}
+}
+
+/* ---------- Events ---------- */
+$("#m-mb").onclick=()=>{mode="mb";store.set("hv-mode",mode);render()};
+$("#m-own").onclick=()=>{mode="own";store.set("hv-mode",mode);render()};
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render();scrollTo(0,0)});
+$("#c-close").onclick=closeCam;
+$("#c-prev").onclick=()=>{if(camIdx>0){camIdx--;showShot()}};
+$("#c-next").onclick=()=>{if(camIdx<flat().length-1){camIdx++;showShot()}else closeCam()};
+$("#shutter").onclick=e=>{ if(stream){e.preventDefault();capture()} };
+$("#file").onchange=e=>{const f=e.target.files[0]; if(f) savePhoto(f); e.target.value=""};
+$("#file2").onchange=e=>{const f=e.target.files[0]; if(f) savePhoto(f); e.target.value=""};
+document.addEventListener("keydown",e=>{if(!$("#cam").hidden&&e.key==="Escape")closeCam()});
+
+/* ---------- Foto's bewaren op het toestel (IndexedDB) ---------- */
+const db=(()=>{
+  let p=null;
+  const open=()=>p||(p=new Promise((res,rej)=>{try{const r=indexedDB.open("hoekvast",1);r.onupgradeneeded=()=>r.result.createObjectStore("photos");r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}));
+  const tx=(m,fn)=>open().then(d=>new Promise((res,rej)=>{const t=d.transaction("photos",m);const st=t.objectStore("photos");const out=fn(st);t.oncomplete=()=>res(out&&out.result);t.onerror=()=>rej(t.error)})).catch(()=>null);
+  return{
+    put:(k,v)=>tx("readwrite",st=>st.put(v,k)),
+    clear:()=>tx("readwrite",st=>st.clear()),
+    load:()=>open().then(d=>new Promise(res=>{const out={};const t=d.transaction("photos");const c=t.objectStore("photos").openCursor();c.onsuccess=()=>{const cur=c.result;if(cur){out[cur.key]=cur.value;cur.continue()}else res(out)};c.onerror=()=>res(out)})).catch(()=>({}))
+  };
+})();
+
+render();
+db.load().then(saved=>{
+  let n=0;
+  for(const [k,b] of Object.entries(saved||{})){ if(b instanceof Blob){photos[k]={blob:b,url:URL.createObjectURL(b)};doneIds.add(k);n++} }
+  if(n){store.set("hv-done",[...doneIds]);render()}
+});
+
+/* Installeerbare app (alleen buiten de preview) */
+try{ if("serviceWorker" in navigator && window.top===window && location.protocol==="https:") navigator.serviceWorker.register("sw.js").catch(()=>{}) }catch(e){}
+</script>
+
+</body>
+</html>
