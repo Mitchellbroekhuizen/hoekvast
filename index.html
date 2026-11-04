@@ -11,9 +11,9 @@
 <body>
 <title>Hoekvast</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="theme-color" content="#14161a">
+<meta name="theme-color" content="#0F1113">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: één-scherm camera-tool — sticky kop met modus, tabbladen eronder, camerapaneel schuift volledig over het scherm */
 :root{
@@ -267,6 +267,112 @@ h2 small{font:500 12px var(--f-mono);color:var(--mute);letter-spacing:.06em;marg
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<style>
+/* ===== Zoeker-design: Manrope, limoen-accent, donkere kaarten ===== */
+:root{
+  --bg:#0F1113; --panel:#1A1D21; --line:#2A2E34; --fg:#F2F3F5; --mute:#A8AEB6;
+  --tape:#B8F34A; --tape-ink:#0E1400; --ok:#7FD99A; --warn:#FFB547;
+  --f-display:"Manrope",system-ui,sans-serif; --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+body{font:15px/1.5 var(--f-body)}
+header{border-bottom:0}
+.head{padding-block:14px 8px}
+.brand b{font:800 22px/1 var(--f-display);text-transform:none;letter-spacing:-.01em}
+.brand span{font-size:11px}
+.mode{background:var(--panel);border:0}
+.mode button{font-weight:700;font-size:12px;padding:7px 11px}
+.mode button[aria-pressed="true"]{background:#fff;color:#0B0C0E}
+main{padding-block:10px 210px}
+h2{font:700 11px var(--f-mono);letter-spacing:.1em;color:var(--mute);margin:24px 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+h2 small{margin:0;font-size:11px}
+.lede{font-size:14px}
+.car input{border:0;border-radius:12px;padding:11px 12px}
+.car label,.lakrow span{font-size:11px}
+
+.cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 0 12px;padding-bottom:2px}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex:0 0 116px;background:var(--panel);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.cat span{font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cat b{font:700 18px var(--f-mono)} .cat b i{font-style:normal;color:#6B7179}
+.cat em{display:block;height:4px;border-radius:2px;background:#2E3238;overflow:hidden} .cat em u{display:block;height:100%;background:var(--tape)}
+.hint{background:var(--panel);border-radius:14px;padding:12px;display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.hint svg{width:18px;height:18px;flex:none;color:var(--tape);margin-top:2px}
+.hint p{margin:0;font-size:13px;color:#D4D8DD}
+
+.grp{background:var(--panel);border-radius:18px;overflow:hidden}
+.shot{border-top:1px solid #24282E} .shot:first-child{border-top:0} .shot:last-child{border-bottom:0}
+.shot summary{padding:12px 14px;grid-template-columns:34px 1fr auto}
+.shot[open]{background:#1F2328}
+.sname{font-weight:700}
+.chip{border-radius:6px}
+.body{padding:4px 14px 16px}
+.plan{background:var(--bg);border:0;border-radius:12px}
+.ai{border-left:0;border-radius:10px;background:rgba(184,243,74,.08)}
+.go{font:700 15px var(--f-body);letter-spacing:0;text-transform:none;border-radius:12px;padding:11px 16px}
+.card{border:0;border-radius:18px}
+.card h3{font:800 17px var(--f-body);text-transform:none;letter-spacing:0}
+.lensc b,.gh b{font-family:var(--f-mono);font-size:22px}
+.nav.lite{font:600 13px var(--f-body);text-transform:none;letter-spacing:0}
+
+/* Dock onderin: grote cameraknop + tabbladen */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:6;padding:18px 0 calc(6px + env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(15,17,19,0),var(--bg) 28%)}
+.camgo{width:100%;height:58px;border:0;border-radius:18px;background:var(--tape);color:var(--tape-ink);font:800 17px var(--f-body);display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.55)}
+.camgo svg{width:22px;height:22px}
+.camgo small{font:600 12px var(--f-mono);opacity:.65}
+.dock .tabs{margin-top:6px;gap:0}
+.dock .tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:50px;padding:6px 2px 2px;font:600 11px var(--f-body);letter-spacing:0;text-transform:none;border-bottom:0;color:var(--mute)}
+.dock .tabs button svg{width:22px;height:22px}
+.dock .tabs button[aria-selected="true"]{color:var(--tape)}
+.toast{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+
+/* Camera */
+#cam{display:block}
+#cam .vf{position:absolute;inset:0}
+#ov.nogrid > g:first-child{display:none}
+#det{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.dtag{position:absolute;background:#fff;color:#0B0C0E;font:700 12px var(--f-body);padding:4px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;transition:left .25s,top .25s}
+.dtag.good{background:var(--tape);color:var(--tape-ink)}
+.cbar{padding:calc(env(safe-area-inset-top,0px) + 12px) max(14px,env(safe-area-inset-right,0px)) 40px max(14px,env(safe-area-inset-left,0px));background:linear-gradient(rgba(0,0,0,.72),rgba(0,0,0,0));align-items:center}
+.cbar .t{display:flex;flex-direction:column;align-items:center;text-align:center}
+#c-step{font:600 11px var(--f-mono);letter-spacing:.1em;color:#C9CED4}
+.cbar .t b{font:800 20px/1.2 var(--f-body);text-transform:none;letter-spacing:0}
+.cbar .x{width:44px;height:44px;border:0;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:0}
+.cbar .x svg{width:20px;height:20px}
+.cbar .x:disabled{opacity:.35}
+.guide{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 84px);transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);background:rgba(0,0,0,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:18px;padding:9px 14px 9px 11px;display:flex;gap:10px;align-items:center;color:#fff;transition:background .2s}
+.guide svg{width:20px;height:20px;flex:none;color:var(--tape)}
+.guide b{display:block;font-weight:800;font-size:15px;line-height:1.25}
+.guide span{display:block;font-size:13px;color:#C9CED4;line-height:1.35}
+.guide.good{background:var(--tape);color:var(--tape-ink)} .guide.good svg{color:var(--tape-ink)} .guide.good span{color:#2D3A05}
+.tools{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 168px);display:flex;flex-direction:column;gap:8px;align-items:center}
+.tbtn{width:46px;height:46px;border-radius:14px;border:0;background:rgba(0,0,0,.5);color:#fff;display:grid;place-items:center;padding:0;cursor:pointer}
+.tbtn svg{width:20px;height:20px}
+.tbtn[aria-pressed="true"]{background:#fff;color:#0B0C0E}
+.tools .tl{font:600 10px var(--f-mono);color:#E4E7EB;background:rgba(0,0,0,.5);padding:2px 6px;border-radius:4px}
+.level{right:auto;left:50%;transform:translateX(-50%);bottom:300px;background:rgba(0,0,0,.55);border-radius:999px;padding:4px 10px}
+#cam.nolevel .level{display:none}
+.fallback{padding:150px 24px 300px}
+.controls{position:absolute;left:0;right:0;bottom:0;display:block;background:linear-gradient(rgba(10,11,13,0),rgba(10,11,13,.92) 18%,#0A0B0D 36%);padding:46px max(16px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.autol{display:flex;gap:6px;align-items:center;font:700 11px var(--f-mono);letter-spacing:.1em;color:var(--tape);text-transform:uppercase;margin-bottom:8px}
+.autol svg{width:14px;height:14px}
+#cam .hud{position:static;display:flex;flex-wrap:wrap;gap:6px}
+.prof{display:contents}
+#cam .hud .chip,#cam .prof .chip{background:#1C1F24;border:0;color:#fff;font:600 12px var(--f-mono);padding:6px 9px;border-radius:8px}
+#cam .hud .chip.lens{color:var(--tape)}
+#cam .hud .chip.warn{color:var(--warn)}
+#cam .prof .chip.off{color:#7D838B}
+#cam .prof button.chip{color:var(--tape);background:none;border:1px solid #3A3E45}
+#cam .zoom{position:static;transform:none;margin:12px auto 0;width:max-content;background:#1C1F24}
+.crow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:14px}
+.crow .l{display:flex;align-items:center}
+.mini{width:52px;height:52px;border-radius:12px;border:2px solid #3A3E45}
+.mini.empty{display:block;background:#2A2E34}
+.shutter{width:80px;height:80px;border:4px solid #fff;background:var(--tape);box-shadow:inset 0 0 0 4px #0A0B0D;display:block}
+.nextb{justify-self:end;height:52px;max-width:150px;border-radius:14px;border:1px solid #3A3E45;background:none;color:#fff;padding:0 12px;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;font-family:var(--f-body)}
+.nextb span{font-size:11px;color:#A8AEB6}
+.nextb b{font-size:13px;font-weight:700;max-width:124px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+</style>
 
 <header>
   <div class="wrap">
@@ -277,17 +383,20 @@ h2 small{font:500 12px var(--f-mono);color:var(--mute);letter-spacing:.06em;marg
         <button id="m-own" aria-pressed="false">Eigen shoot</button>
       </div>
     </div>
-    <nav class="tabs" role="tablist">
-      <button role="tab" data-tab="list" aria-selected="true">Shotlist</button>
-      <button role="tab" data-tab="extra" aria-selected="false" id="tab-extra">Keuring</button>
-      <button role="tab" data-tab="pixel" aria-selected="false">Pixel-instellingen</button>
-      <button role="tab" data-tab="light" aria-selected="false">Licht &amp; plek</button>
-      <button role="tab" data-tab="ai" aria-selected="false">AI-bewerking</button>
-    </nav>
   </div>
 </header>
 
 <main class="wrap" id="main"></main>
+<div class="dock"><div class="wrap">
+    <button class="camgo" id="camgo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Camera openen <small id="camgo-n"></small></button>
+    <nav class="tabs" role="tablist" aria-label="Onderdelen">
+      <button role="tab" data-tab="list" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M4 6h.01"/><path d="M4 12h.01"/><path d="M4 18h.01"/></svg><span>Shotlist</span></button>
+      <button role="tab" data-tab="extra" aria-selected="false" id="tab-extra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 13l2 2 4-4"/></svg><span>Keuring</span></button>
+      <button role="tab" data-tab="pixel" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10"/><path d="M18 7h2"/><circle cx="16" cy="7" r="2"/><path d="M4 17h2"/><path d="M10 17h10"/><circle cx="8" cy="17" r="2"/></svg><span>Pixel</span></button>
+      <button role="tab" data-tab="light" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.9 4.9l1.4 1.4"/><path d="M17.7 17.7l1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.9 19.1l1.4-1.4"/><path d="M17.7 6.3l1.4-1.4"/></svg><span>Licht</span></button>
+      <button role="tab" data-tab="ai" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19L15 9"/><path d="M14 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/><path d="M19 12l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/></svg><span>AI</span></button>
+    </nav>
+  </div></div>
 
 <section id="cam" hidden aria-label="Camera">
   <div class="vf" id="vf">
@@ -295,20 +404,35 @@ h2 small{font:500 12px var(--f-mono);color:var(--mute);letter-spacing:.06em;marg
     <img id="ghost" alt="" hidden>
     <img class="still" id="still" alt="" hidden>
     <svg class="ov" id="ov" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"></svg>
+    <svg id="det" aria-hidden="true"></svg>
+    <div class="dtag" id="dtag" hidden></div>
     <div class="fallback" id="fb" hidden></div>
     <div class="cbar">
-      <div class="t"><b id="c-name"></b><span id="c-how"></span></div>
-      <button class="x" id="c-ghost" aria-label="Spookbeeld van vorige foto" aria-pressed="false" title="Spookbeeld">◐</button><button class="x" id="c-close" aria-label="Sluit camera">×</button>
+      <button class="x" id="c-close" aria-label="Sluit camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></button>
+      <div class="t"><span id="c-step"></span><b id="c-name"></b></div>
+      <button class="x" id="c-prev" aria-label="Vorige foto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
     </div>
-    <div class="hud" id="hud"></div>
+    <div class="guide" id="guide" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" id="g-ic"><circle cx="12" cy="12" r="8"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg><div><b id="g-main"></b><span id="c-how"></span></div></div>
+    <div class="tools" id="tools" role="group" aria-label="Tools">
+      <button class="tbtn" id="t-grid" aria-label="Raster" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9.3 4v16"/><path d="M14.7 4v16"/><path d="M4 9.3h16"/><path d="M4 14.7h16"/></svg></button>
+      <button class="tbtn" id="t-level" aria-label="Waterpas" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="8" width="20" height="8" rx="2"/><circle cx="12" cy="12" r="1.6"/></svg></button>
+      <button class="tbtn" id="c-ghost" aria-label="Spookbeeld van vorige foto" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg></button>
+      <button class="tbtn" id="t-torch" aria-label="Lamp" aria-pressed="false" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2h8l-2 6h-4z"/><path d="M10 8v12h4V8"/></svg></button>
+      <label class="tbtn" id="c-app" title="Beste kwaliteit: maak de foto met Pixel Camera" aria-label="Foto met de Pixel-app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><input type="file" id="file2" accept="image/*" capture="environment" hidden></label>
+      <span class="tl" id="t-label"></span>
+    </div>
     <div class="level" id="level" hidden></div>
-    <div class="zoom" id="zoom" hidden></div>
     <div class="flash" id="flash"></div>
   </div>
   <div class="controls">
-    <div class="side"><button class="nav ic" id="c-prev" aria-label="Vorige foto">‹</button><label class="nav app" id="c-app" title="Beste kwaliteit: maak de foto met Pixel Camera">Pixel-app<input type="file" id="file2" accept="image/*" capture="environment" hidden></label></div>
-    <label class="shutter" id="shutter" role="button" tabindex="0" aria-label="Foto maken"><input type="file" id="file" accept="image/*" capture="environment" hidden></label>
-    <div class="side r"><img class="mini" id="mini" alt="" hidden><button class="nav ic" id="c-next" aria-label="Volgende foto">›</button></div>
+    <div class="autol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg>Automatisch ingesteld</div>
+    <div class="hud" id="hud"></div>
+    <div class="zoom" id="zoom" hidden></div>
+    <div class="crow">
+      <div class="l"><img class="mini" id="mini" alt="Laatste foto" hidden><span class="mini empty" id="mini0"></span></div>
+      <label class="shutter" id="shutter" role="button" tabindex="0" aria-label="Foto maken"><input type="file" id="file" accept="image/*" capture="environment" hidden></label>
+      <button class="nextb" id="c-next"><span>Daarna</span><b id="c-nextn"></b></button>
+    </div>
   </div>
 </section>
 <div class="toast" id="toast" hidden></div>
@@ -460,7 +584,7 @@ async function applyProfile(s){
 }
 function bindToggle(s){const b=$("#p-toggle");if(b)b.onclick=()=>{camAuto=!camAuto;applyProfile(s)}}
 function tapFocus(e){
-  if(!track||e.target.closest("button,label,.cbar,.zoom,.hud")) return;
+  if(!track||e.target.closest("button,label,.cbar,.zoom,.hud,.tools,.guide")) return;
   const v=$("#video"), r=v.getBoundingClientRect();
   const vw=v.videoWidth||r.width, vh=v.videoHeight||r.height, sc=Math.max(r.width/vw,r.height/vh);
   const dw=vw*sc, dh=vh*sc, ox=(dw-r.width)/2, oy=(dh-r.height)/2;
@@ -516,8 +640,8 @@ const OV={
 };
 function overlay(key){
   const thirds=`<g stroke="rgba(255,255,255,.22)" stroke-width="2"><line x1="533" y1="0" x2="533" y2="900"/><line x1="1067" y1="0" x2="1067" y2="900"/><line x1="0" y1="300" x2="1600" y2="300"/><line x1="0" y1="600" x2="1600" y2="600"/></g>`;
-  const margin=["side","front","rear","34f","34r"].includes(key)?`<rect x="120" y="150" width="1360" height="650" fill="none" stroke="rgba(242,193,78,.5)" stroke-width="3" stroke-dasharray="4 14"/><text x="130" y="140" fill="#f2c14e" font-size="30" font-family="JetBrains Mono,monospace">houd de auto binnen dit kader</text>`:"";
-  return thirds+margin+`<g fill="none" stroke="#f2c14e" stroke-width="5" stroke-linejoin="round" opacity=".9">${OV[key]||""}</g>`;
+  const margin=["side","front","rear","34f","34r"].includes(key)?`<rect x="120" y="150" width="1360" height="650" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-dasharray="4 14"/><text x="130" y="140" fill="rgba(255,255,255,.8)" font-size="30" font-family="Manrope,sans-serif">houd de auto binnen dit kader</text>`:"";
+  return thirds+margin+`<g fill="none" stroke="rgba(255,255,255,.85)" stroke-width="4" stroke-linejoin="round" opacity=".9">${OV[key]||""}</g>`;
 }
 
 /* ---------- Render ---------- */
@@ -530,7 +654,8 @@ function render(){
   if(tab==="light") m.innerHTML=lightView();
   if(tab==="ai") m.innerHTML=aiView();
   if(tab==="extra") m.innerHTML=mode==="mb"?keuringView():instaView();
-  $("#tab-extra").textContent=mode==="mb"?"Keuring":"Instagram";
+  $("#tab-extra span").textContent=mode==="mb"?"Keuring":"Instagram";
+  {const all=flat();$("#camgo-n").textContent=`${all.filter(x=>doneIds.has(x.id)).length}/${all.length}`}
   bindMain();
 }
 function listView(){
@@ -542,8 +667,10 @@ function listView(){
   return `<div class="car"><label for="carname">Auto</label><input id="carname" placeholder="bijv. ${mode==="mb"?"Alpina B5 · kenteken":"Octavia VRS"}" value="${esc(carName)}"></div>
   <div class="lakrow"><span>Lakkleur</span><div class="mode" role="group" aria-label="Lakkleur">${Object.entries(LAK).map(([k,v])=>`<button data-lak="${k}" aria-pressed="${k===lak}">${v.l}</button>`).join("")}</div></div>
   <div class="progress"><div class="bar"><i style="width:${all.length?done/all.length*100:0}%"></i></div><span>${done}/${all.length}</span></div>
+  <div class="cats">${SHOTS[mode].map(g=>{const dn=g.items.filter(x=>doneIds.has(x.id)).length;return `<div class="cat"><span>${esc(g.g.split(" — ").pop())}</span><b>${dn}<i>/${g.items.length}</i></b><em><u style="width:${dn/g.items.length*100}%"></u></em></div>`}).join("")}</div>
+  <div class="hint">${ICON_SPARK}<p>Tik op <b>Camera openen</b> en richt op de auto. Bij exterieurfoto's ziet de camera de auto, controleert de hoek en zegt hoe je moet gaan staan. De instellingen staan al klaar.</p></div>
   <p class="lede">${intro}</p>
-  ${SHOTS[mode].map(g=>`<h2>${esc(g.g)} <small>${g.items.length} foto's</small></h2>
+  ${SHOTS[mode].map(g=>`<h2>${esc(g.g)} <small>${g.items.filter(x=>doneIds.has(x.id)).length}/${g.items.length}</small></h2><div class="grp">
    ${g.items.map(s=>{n++;const i=all.indexOf(s);const d=doneIds.has(s.id);return `<details class="shot${d?" done":""}">
     <summary><span class="num" data-st="${(insp.status||{})[s.id]||""}">${d?"✓":String(n).padStart(2,"0")}</span><span class="sname">${esc(s.n)}<em>${esc(s.h)}</em></span>
      <span class="chips">${qChips(s.id)}<span class="chip lens">${esc(s.lens)}</span>${s.d>0?`<span class="chip h">${s.d} m</span>`:""}</span></summary>
@@ -554,7 +681,7 @@ function listView(){
       ${s.ai?`<p class="ai"><b>AI-klaar:</b> ${esc(s.ai)}</p>`:""}
       ${statusUI(s)}
       <button class="go" data-shoot="${i}">${photos[s.id]?"Opnieuw":"Fotograferen"}</button>${photos[s.id]?`<img class="thumb" src="${photos[s.id].url}" data-annot="${s.id}" alt="Gemaakte foto ${esc(s.n)}, tik om te markeren">`:""}
-     </div></div></details>`}).join("")}`).join("")}
+     </div></div></details>`}).join("")}</div>`).join("")}
   <div class="card" style="margin-top:24px"><h3>Klaar met de set?</h3><p class="note">Foto's blijven in deze sessie staan. Exporteer ze naar je telefoon met de juiste bestandsnamen.</p>
    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="go" id="export">Foto's opslaan</button><button class="nav" id="reset" style="border:1px solid var(--line);background:none;color:var(--fg);border-radius:8px;padding:8px 12px">Nieuwe auto</button></div>
    <p class="note" id="exportmsg"></p></div>`;
@@ -668,23 +795,31 @@ function useFallback(){
   $("#video").hidden=true; $("#file").hidden=false; $("#fb").hidden=false;
 }
 function showShot(){
-  const s=flat()[camIdx];
-  $("#c-name").textContent=`${camIdx+1}. ${s.n}`;
-  $("#c-how").textContent=s.how;
-  $("#ov").innerHTML=overlay(s.ov);
+  const all=flat(), s=all[camIdx];
+  $("#c-step").textContent=`SHOT ${String(camIdx+1).padStart(2,"0")} VAN ${all.length} · ${mode==="mb"?"MB AUTOADVIES":"EIGEN SHOOT"}`;
+  $("#c-name").textContent=s.n;
+  $("#ov").innerHTML=overlay(s.ov); $("#ov").classList.toggle("nogrid",!gridOn);
   const want=parseFloat(s.lens), zs=zoomSteps();
   const can=!stream||!zs.length||zs.includes(want);
   $("#hud").innerHTML=`<span class="chip lens">${esc(s.lens)}</span><span class="chip">${esc(s.h)}</span>${s.d>0?`<span class="chip">± ${s.d} m</span>`:""}${!can?`<span class="chip warn">${esc(s.lens)} niet in browser: gebruik Pixel-app</span>`:""}`;
   renderZoom(want);
   $("#hud").insertAdjacentHTML("beforeend",'<div class="prof" id="prof"></div>');
   applyProfile(s);
-  $("#fb").innerHTML=`<svg viewBox="0 0 1600 900" style="background:#111">${overlay(s.ov)}</svg><p>Live zoeker is hier niet beschikbaar. Kijk naar het kader hierboven en tik op de gele knop of op Pixel-app om de foto te maken.<br>Op GitHub Pages krijg je de live zoeker met kader en zoomknoppen.</p>`;
+  $("#fb").innerHTML=`<svg viewBox="0 0 1600 900" style="background:#111">${overlay(s.ov)}</svg><p>Live zoeker is hier niet beschikbaar. Tik op de knop om de foto te maken.</p>`;
   showGhost();
-  const p=photos[s.id]; const mini=$("#mini"); mini.hidden=!p; if(p) mini.src=p.url;
-  $("#c-prev").disabled=camIdx===0; $("#c-next").textContent=camIdx===flat().length-1?"✓":"›";
+  const p=photos[s.id]; const mini=$("#mini"); mini.hidden=!p; $("#mini0").hidden=!!p; if(p) mini.src=p.url;
+  $("#c-prev").disabled=camIdx===0;
+  const nx=nextOpen(camIdx); $("#c-nextn").textContent=nx<0?"Klaar":all[nx].n; $("#c-next").querySelector("span").textContent=nx<0?"Alles gedaan":"Daarna";
+  $("#t-label").textContent=EXT.has(s.ov)?"EXTERIEUR":s.ov==="interior"?"INTERIEUR":"DETAIL";
+  $("#cam").classList.toggle("nolevel",!levelShow);
+  $("#t-grid").setAttribute("aria-pressed",gridOn); $("#t-level").setAttribute("aria-pressed",levelShow);
+  det.state=""; drawDet(null);
+  setGuide(EXT.has(s.ov)&&stream?"Richt op de auto":s.h, s.how, "");
+  if(EXT.has(s.ov)&&stream) startDetect(); else stopDetect();
+  updateTorch(s);
 }
 function closeCam(){
-  $("#cam").hidden=true; document.body.style.overflow="";
+  $("#cam").hidden=true; document.body.style.overflow=""; stopDetect();
   if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;track=null;imgCap=null;zoomCaps=null}
   render();
 }
@@ -698,7 +833,8 @@ function savePhoto(blob){
   makeGhost(blob).then(g=>g&&gdb.put(s.id,g));
   qualityCheck(blob,s).then(flags=>{
     const q=I("q",{}); if(flags.length) q[s.id]=flags; else delete q[s.id]; saveInsp();
-    if(flags.length) toast("⚠ "+flags.join(", ")+" · maak hem opnieuw",true); else toast("Opgeslagen ✓");
+    if(flags.length) toast("⚠ "+flags.join(", ")+" · maak hem opnieuw",true);
+    else{ const nx=nextOpen(camIdx); toast(nx<0?"Opgeslagen ✓ · set compleet":"Opgeslagen ✓ · volgende"); if(nx>=0&&!$("#cam").hidden&&flat()[camIdx]===s) setTimeout(()=>{if(!$("#cam").hidden&&flat()[camIdx]===s){camIdx=nx;showShot()}},700) }
   });
   if(navigator.vibrate) try{navigator.vibrate(30)}catch(e){}
 }
@@ -742,6 +878,124 @@ function onTilt(e){
   el.classList.toggle("ok",Math.abs(v)<1.5);
 }
 function startLevel(){ if(levelOn) return; try{window.addEventListener("deviceorientation",onTilt);levelOn=true}catch(e){} }
+
+/* ---------- Slimme camera: auto herkennen + aanwijzingen ---------- */
+const ICON_SPARK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/></svg>';
+const EXT=new Set(["side","front","rear","34f","34r"]);
+const VIEWN={fr:"voor- of achterkant",side:"zijkant","34":"¾-hoek"};
+let gridOn=store.get("hv-grid",true), levelShow=store.get("hv-levelshow",true), torchOn=false;
+const det={model:null,loading:null,run:false,lastSeen:0,state:"",focusT:0,cv:null,failed:false};
+
+function firstOpen(){const a=flat();const i=a.findIndex(x=>!doneIds.has(x.id));return i<0?0:i}
+function nextOpen(from){const a=flat();for(let k=1;k<a.length;k++){const i=(from+k)%a.length;if(!doneIds.has(a[i].id))return i}return -1}
+function wantView(s){return s.ov==="side"?"side":(s.ov==="front"||s.ov==="rear")?"fr":"34"}
+// Verhouding breedte/hoogte van het kader rond de auto: voor/achter is smal, zijkant is lang
+function viewOf(ar){return ar<1.75?"fr":ar>3.1?"side":ar<2.5?"34":null}
+const cap1=t=>t.charAt(0).toUpperCase()+t.slice(1);
+
+// n = kader op het scherm, 0..1 van de zoeker; ar = breedte/hoogte in pixels
+function guideFor(s,n,ar,tilt){
+  const want=wantView(s), got=viewOf(ar);
+  const head=got?`${cap1(VIEWN[got])} herkend`:"Auto herkend";
+  const R=(main,sub,ok=false)=>({main,sub,ok,head,got});
+  if(got&&got!==want&&(got==="fr"||want==="fr")) return R(`Dit lijkt een ${VIEWN[got]}`,`Voor deze foto: ${VIEWN[want]}. Loop om de auto heen.`);
+  if(n.x0<0.02||n.x1>0.98||n.y0<0.02||n.y1>0.98) return R("Stap ±1 m terug","De auto valt buiten beeld.");
+  const cover=n.x1-n.x0, pct=Math.round(cover*100);
+  if(cover>0.93) return R("Stap iets terug",`De auto vult ${pct}% van de breedte, net te veel.`);
+  if(cover<0.6) return R(cover<0.4?"Kom ±2 m dichterbij":"Kom ±1 m dichterbij",`De auto vult maar ${pct}% van de breedte.`);
+  const cx=(n.x0+n.x1)/2;
+  if(cx<0.43) return R("Draai iets naar links","De auto staat niet in het midden.");
+  if(cx>0.57) return R("Draai iets naar rechts","De auto staat niet in het midden.");
+  if(tilt!=null&&Math.abs(tilt)>1.5) return R("Houd de telefoon recht",`${Math.abs(tilt).toFixed(1).replace(".",",")}° scheef`);
+  if(got&&got!==want) return R("Bijna goed",`Dit lijkt eerder een ${VIEWN[got]}. Voor deze foto: ${VIEWN[want]}.`);
+  return R("Perfect, maak de foto",`${head} · ${pct}% van het beeld`,true);
+}
+
+function setGuide(main,sub,cls){
+  const g=$("#guide"); if(!g) return;
+  $("#g-main").textContent=main||""; $("#c-how").textContent=sub||"";
+  g.className="guide"+(cls?" "+cls:"");
+  $("#g-ic").innerHTML=cls==="good"?'<path d="M5 12l5 5 9-10"/>':main&&/terug|dichterbij|draai/i.test(main)?'<path d="M12 5v14"/><path d="M6 13l6 6 6-6"/>':'<circle cx="12" cy="12" r="8"/><path d="M12 8v4"/><path d="M12 16h.01"/>';
+}
+
+function showShotTools(){
+  $("#ov").classList.toggle("nogrid",!gridOn); $("#cam").classList.toggle("nolevel",!levelShow);
+  $("#t-grid").setAttribute("aria-pressed",gridOn); $("#t-level").setAttribute("aria-pressed",levelShow);
+}
+function updateTorch(s){
+  const b=$("#t-torch"); let caps={}; try{caps=track&&track.getCapabilities?track.getCapabilities():{}}catch(e){}
+  b.hidden=!caps.torch; torchOn=!!(caps.torch&&TORCH.has(s.id)); b.setAttribute("aria-pressed",torchOn);
+}
+
+function loadDetector(){
+  if(det.model) return Promise.resolve(det.model);
+  if(det.loading) return det.loading;
+  const add=src=>new Promise((res,rej)=>{const sc=document.createElement("script");sc.src=src;sc.crossOrigin="anonymous";sc.onload=res;sc.onerror=rej;document.head.appendChild(sc)});
+  det.loading=(window.cocoSsd?Promise.resolve():add("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js").then(()=>add("https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js")))
+    .then(()=>cocoSsd.load({base:"lite_mobilenet_v2"})).then(m=>(det.model=m))
+    .catch(e=>{det.loading=null;throw e});
+  return det.loading;
+}
+function stopDetect(){det.run=false;drawDet(null)}
+function startDetect(){
+  if(det.run) return;
+  det.run=true; det.lastSeen=performance.now();
+  if(!det.model){const s=flat()[camIdx]; setGuide("Richt op de auto","Herkenning wordt geladen…","")}
+  loadDetector().then(()=>{if(det.run) loopDetect()}).catch(()=>{
+    det.run=false; det.failed=true; const s=flat()[camIdx];
+    if(EXT.has(s.ov)) setGuide(s.h,s.how+" (Autoherkenning laadt alleen met internet.)","");
+  });
+}
+async function loopDetect(){
+  while(det.run&&!$("#cam").hidden&&stream){
+    const t0=performance.now();
+    try{await detectOnce()}catch(e){}
+    await new Promise(r=>setTimeout(r,Math.max(120,330-(performance.now()-t0))));
+  }
+}
+function vfMap(v){
+  const r=$("#vf").getBoundingClientRect(), vw=v.videoWidth||r.width, vh=v.videoHeight||r.height;
+  const sc=Math.max(r.width/vw,r.height/vh), dw=vw*sc, dh=vh*sc;
+  return {r,dw,dh,ox:(dw-r.width)/2,oy:(dh-r.height)/2};
+}
+async function detectOnce(){
+  const v=$("#video"); if(!v.videoWidth||!det.model) return;
+  const W=480, H=Math.round(W*v.videoHeight/v.videoWidth);
+  const c=det.cv||(det.cv=document.createElement("canvas")); if(c.width!==W){c.width=W;c.height=H}
+  c.getContext("2d").drawImage(v,0,0,W,H);
+  const res=await det.model.detect(c,6,0.35);
+  if(!det.run) return;
+  const s=flat()[camIdx]; if(!EXT.has(s.ov)) return;
+  const cars=res.filter(r=>["car","truck","bus"].includes(r.class)).sort((a,b)=>b.bbox[2]*b.bbox[3]-a.bbox[2]*a.bbox[3]);
+  if(!cars.length){ drawDet(null); if(performance.now()-det.lastSeen>1200){setGuide("Richt op de auto",s.how,"");det.state=""} return }
+  det.lastSeen=performance.now();
+  const [x,y,w,h]=cars[0].bbox, m=vfMap(v);
+  const sb={l:x/W*m.dw-m.ox,t:y/H*m.dh-m.oy,r:(x+w)/W*m.dw-m.ox,b:(y+h)/H*m.dh-m.oy};
+  const n={x0:sb.l/m.r.width,x1:sb.r/m.r.width,y0:sb.t/m.r.height,y1:sb.b/m.r.height};
+  const ar=(w*v.videoWidth/W)/(h*v.videoHeight/H);
+  const g=guideFor(s,n,ar,levelShow?lastTilt:null);
+  drawDet(sb,g,cars[0].score,m.r);
+  setGuide(g.main,g.sub,g.ok?"good":"");
+  if(g.ok&&det.state!=="good"&&navigator.vibrate) try{navigator.vibrate(15)}catch(e){}
+  det.state=g.ok?"good":"";
+  if(track&&performance.now()-det.focusT>3000){
+    det.focusT=performance.now();
+    const fx=(x+w/2)/W, fy=(y+h/2)/H;
+    let caps={}; try{caps=track.getCapabilities?track.getCapabilities():{}}catch(e){}
+    if(caps.pointsOfInterest!==undefined||caps.focusMode) track.applyConstraints({advanced:[{pointsOfInterest:[{x:fx,y:fy}]}]}).catch(()=>{});
+  }
+}
+function drawDet(sb,g,score,r){
+  const svg=$("#det"), tag=$("#dtag"); if(!svg) return;
+  if(!sb){svg.innerHTML="";tag.hidden=true;return}
+  svg.setAttribute("viewBox",`0 0 ${r.width} ${r.height}`);
+  const L=24, col=g.ok?"#B8F34A":"#FFFFFF";
+  const l=Math.max(4,sb.l), t=Math.max(4,sb.t), rr=Math.min(r.width-4,sb.r), b=Math.min(r.height-4,sb.b);
+  svg.innerHTML=`<g fill="none" stroke="${col}" stroke-width="3" stroke-linecap="round"><path d="M${l} ${t+L}V${t}H${l+L}"/><path d="M${rr-L} ${t}H${rr}V${t+L}"/><path d="M${l} ${b-L}V${b}H${l+L}"/><path d="M${rr-L} ${b}H${rr}V${b-L}"/></g>`;
+  tag.hidden=false; tag.className="dtag"+(g.ok?" good":"");
+  tag.textContent=`${g.head} · ${Math.round(score*100)}%`;
+  tag.style.left=Math.min(l,r.width-180)+"px"; tag.style.top=Math.max(4,t-30)+"px";
+}
 
 /* ---------- Export ---------- */
 function slug(s){return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
@@ -1194,7 +1448,11 @@ document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.datase
 $("#c-close").onclick=closeCam;
 $("#vf").addEventListener("click",tapFocus);
 $("#c-prev").onclick=()=>{if(camIdx>0){camIdx--;showShot()}};
-$("#c-next").onclick=()=>{if(camIdx<flat().length-1){camIdx++;showShot()}else closeCam()};
+$("#c-next").onclick=()=>{const nx=nextOpen(camIdx); if(nx>=0){camIdx=nx;showShot()} else if(camIdx<flat().length-1){camIdx++;showShot()} else closeCam()};
+$("#camgo").onclick=()=>openCam(firstOpen());
+$("#t-grid").onclick=e=>{e.stopPropagation();gridOn=!gridOn;store.set("hv-grid",gridOn);showShotTools()};
+$("#t-level").onclick=e=>{e.stopPropagation();levelShow=!levelShow;store.set("hv-levelshow",levelShow);showShotTools()};
+$("#t-torch").onclick=e=>{e.stopPropagation();torchOn=!torchOn;if(track)track.applyConstraints({advanced:[{torch:torchOn}]}).catch(()=>{});$("#t-torch").setAttribute("aria-pressed",torchOn)};
 $("#shutter").onclick=e=>{ if(stream){e.preventDefault();capture()} };
 $("#file").onchange=e=>{const f=e.target.files[0]; if(f) savePhoto(f); e.target.value=""};
 $("#file2").onchange=e=>{const f=e.target.files[0]; if(f) savePhoto(f); e.target.value=""};
@@ -1215,6 +1473,7 @@ const makeStore=NAME=>{
 const db=makeStore("hoekvast"), gdb=makeStore("hoekvast-ghost");
 
 render();
+try{ if(navigator.mediaDevices&&matchMedia("(pointer:coarse)").matches&&store.get("hv-autocam",true)) openCam(firstOpen()) }catch(e){}
 db.load().then(saved=>{
   let n=0;
   for(const [k,b] of Object.entries(saved||{})){ if(!(b instanceof Blob)||k.startsWith("orig:")) continue; if(k.startsWith("vid:")||k.startsWith("dmg:")){media[k]={blob:b,url:URL.createObjectURL(b)};n++;continue} photos[k]={blob:b,url:URL.createObjectURL(b)};doneIds.add(k);n++ }

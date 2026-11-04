@@ -1,5 +1,7 @@
 // Hoekvast service worker: app werkt ook zonder internet (bijv. op een parkeerterrein)
-const CACHE = "hoekvast-v4";
+const CACHE = "hoekvast-v5";
+// Herkenningsmodel (TensorFlow.js + COCO-SSD) ook offline bewaren
+const CDN = ["cdn.jsdelivr.net", "storage.googleapis.com", "tfhub.dev", "www.kaggle.com"];
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/maskable-512.png"];
 
 self.addEventListener("install", e => {
@@ -19,7 +21,8 @@ self.addEventListener("fetch", e => {
   e.respondWith(
     fetch(e.request)
       .then(res => {
-        if (res.ok && new URL(e.request.url).origin === location.origin) {
+        const u = new URL(e.request.url);
+        if ((res.ok && u.origin === location.origin) || ((res.ok || res.type === "opaque") && CDN.includes(u.hostname))) {
           const copy = res.clone();
           caches.open(CACHE).then(c => c.put(e.request, copy));
         }

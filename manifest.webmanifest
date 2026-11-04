@@ -8,8 +8,8 @@
   "scope": "/hoekvast/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#14161a",
-  "theme_color": "#14161a",
+  "background_color": "#0F1113",
+  "theme_color": "#0F1113",
   "icons": [
     {
       "src": "icons/icon-192.png",
